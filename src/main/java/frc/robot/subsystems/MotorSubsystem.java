@@ -1,52 +1,45 @@
 package frc.robot.subsystems;
 
-// Imported libraries and files
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.MotorConstants; // Constants for the motor, refer with MotorConstants.[variable name]
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax; // WPILib motor
+
+import frc.robot.Constants.MotorConstants;
 
 public class MotorSubsystem extends SubsystemBase {
-    // Class variables (ints, doubles, motor objects) go here
+
+    // Motor object using WPILib
+    private final PWMSparkMax m_motor;
+
+    // Target rotations (simulated)
+    private double targetPositionRotations = 0;
 
     /** Creates a new MotorSubsystem. */
     public MotorSubsystem() {
-
+        m_motor = new PWMSparkMax(MotorConstants.motorCanId); // CAN ID or PWM channel
     }
 
-    /**
-     * Creates a command that turns the motor shaft 360 degrees clockwise.
-     *
-     * @return a command that turns the motor shaft 360 degrees clockwise.
-     */
+    /** Turn motor 360° clockwise (simulated). */
     public Command turnClockwise360() {
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
         return runOnce(() -> {
-            /* one-time action goes here */
+            targetPositionRotations += 1.0;
+            m_motor.set(1.0); // full speed
         });
-        // return run(() -> {
-        //
-        // }); // run() returns a command that repeats 50x per second until canceled or interrupted
     }
 
-    /**
-     * Creates a command that turns the motor shaft 360 degrees counterclockwise.
-     *
-     * @return a command that turns the motor shaft 360 degrees counterclockwise.
-     */
+    /** Turn motor 360° counterclockwise (simulated). */
     public Command turnCounterClockwise360() {
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
         return runOnce(() -> {
-            /* one-time action goes here */
+            targetPositionRotations -= 1.0;
+            m_motor.set(-1.0); // full speed
         });
-        // return run(() -> {
-        //
-        // }); // run() returns a command that repeats 50x per second until canceled or interrupted
     }
 
-    @Override // Rewrites (adds content to) a method from SubsystemBase
+    @Override
     public void periodic() {
-        // This method will be called once per scheduler run (50 times per second)
+        SmartDashboard.putNumber("Target Rotations", targetPositionRotations);
     }
 }
+
+
