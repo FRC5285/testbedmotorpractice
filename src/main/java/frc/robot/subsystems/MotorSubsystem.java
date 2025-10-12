@@ -98,7 +98,7 @@ public class MotorSubsystem extends SubsystemBase {
     @Override // Rewrites (adds content to) a method from SubsystemBase
     public void periodic() {
         // This method will be called once per scheduler run (50 times per second)
-        thisMotor.setPosition(this.motorPID.calculate(thisMotor.getRotorPosition().getValueAsDouble()));
-        if (motorPID.atGoal()) thisMotor.stopMotor();
+        thisMotor.setPosition(this.motorPID.calculate(this.motorPID.getGoal()));
+        //if (motorPID.atGoal()) thisMotor.stopMotor();
     }
 }
