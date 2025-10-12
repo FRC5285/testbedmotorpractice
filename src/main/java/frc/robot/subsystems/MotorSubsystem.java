@@ -29,11 +29,12 @@ public class MotorSubsystem extends SubsystemBase {
     public MotorSubsystem() {
         thisMotor = new TalonFX(MotorConstants.motorCanId);
         thisMotor.setPosition(0);
+        
         SendableRegistry.add(this, "Motor");
         SmartDashboard.putData(this);
 
         thisEncoder = new Encoder(MotorConstants.encoderA, MotorConstants.encoderB);
-
+        thisEncoder.setDistancePerPulse(1.0 / 360.0 * 2.0 * Math.PI * 1.5);
 
         motorPID = new ProfiledPIDController(MotorConstants.kP, MotorConstants.kI, MotorConstants.kD,
             new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA)
@@ -58,7 +59,7 @@ public class MotorSubsystem extends SubsystemBase {
         */
 
         return runOnce(() -> {
-            motorPID.setGoal(360);
+            motorPID.setGoal(thisMotor.getRotorPosition().getValueAsDouble() + 1);
             //thisMotor.set(this.motorPID.calculate(thisEncoder.getDistance()));
         });
 
@@ -73,6 +74,7 @@ public class MotorSubsystem extends SubsystemBase {
      * @return a command that turns the motor shaft 360 degrees counterclockwise.
      */
     public Command turnCounterClockwise360() {
+        motorPID.setGoal(thisMotor.getRotorPosition().getValueAsDouble() - 1);
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
         /*
@@ -96,7 +98,7 @@ public class MotorSubsystem extends SubsystemBase {
     @Override // Rewrites (adds content to) a method from SubsystemBase
     public void periodic() {
         // This method will be called once per scheduler run (50 times per second)
-        thisMotor.set(this.motorPID.calculate(thisEncoder.getDistance()));
+        thisMotor.setPosition(this.motorPID.calculate(thisMotor.getRotorPosition().getValueAsDouble()));
         if (motorPID.atGoal()) thisMotor.stopMotor();
     }
 }
