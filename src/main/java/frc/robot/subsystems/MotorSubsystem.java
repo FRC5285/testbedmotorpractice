@@ -4,7 +4,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorConstants; // Constants for the motor, refer with MotorConstants.[variable name]
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -32,8 +31,10 @@ public class MotorSubsystem extends SubsystemBase {
     public Command turnClockwise360() {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
-        return runOnce(() -> motorPID.setGoal(1)); //one rotation
-    }
+        return runOnce(() -> {
+            motorPID.reset(motor.getRotorPosition().getValueAsDouble());
+            motorPID.setGoal(1);
+        });    }
     /**
      * Creates a command that turns the motor shaft 360 degrees counterclockwise.
      *
@@ -42,8 +43,10 @@ public class MotorSubsystem extends SubsystemBase {
     public Command turnCounterClockwise360() {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
-        return runOnce(() -> motorPID.setGoal(-1)); //negative one rotation
-        // return run(() -> {
+        return runOnce(() -> {
+            motorPID.reset(motor.getRotorPosition().getValueAsDouble());
+            motorPID.setGoal(-1);
+        });        // return run(() -> {
         //
         // }); // run() returns a command that repeats 50x per second until canceled or interrupted
     }
@@ -53,10 +56,8 @@ public class MotorSubsystem extends SubsystemBase {
         // This method will be called once per scheduler run (50 times per second)
         double position = motor.getRotorPosition().getValueAsDouble();
         double output = motorPID.calculate((position));
-        if (motorPID.atGoal()) {
-            motor.setVoltage(0);
-        } else {
-            motor.setVoltage(output);
+
+        motor.setVoltage(output);
         }
     }
-}
+
