@@ -1,64 +1,52 @@
 package frc.robot.subsystems;
 
-// Imported libraries and files
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.MotorConstants; // Constants for the motor, refer with MotorConstants.[variable name]
+import frc.robot.Constants.MotorConstants;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-
 public class MotorSubsystem extends SubsystemBase {
-    // Class variables (ints, doubles, motor objects) go here
     private final TalonFX motor = new TalonFX(MotorConstants.motorCanId);
     private final TrapezoidProfile.Constraints constraints = 
         new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA);
     private final ProfiledPIDController motorPID = 
         new ProfiledPIDController(MotorConstants.kp, MotorConstants.ki, MotorConstants.kd, constraints);
 
-    /** Creates a new MotorSubsystem. */
+    // track the target position in rotations
+    private double goalPosition = 0;
+
     public MotorSubsystem() {
         motorPID.setTolerance(MotorConstants.tolerance);
-        }
+    }
 
-    /**
-     * Creates a command that turns the motor shaft 360 degrees clockwise.
-     *
-     * @return a command that turns the motor shaft 360 degrees clockwise.
-     */
     public Command turnClockwise360() {
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
         return runOnce(() -> {
             double currentPos = motor.getRotorPosition().getValueAsDouble();
-            motorPID.setGoal(currentPos + 1); // 1 rotation forward
+            goalPosition = currentPos + 1.0; // 1 rotation forward
+            motorPID.setGoal(goalPosition);
         });
-
     }
-    /**
-     * Creates a command that turns the motor shaft 360 degrees counterclockwise.
-     *
-     * @return a command that turns the motor shaft 360 degrees counterclockwise.
-     */
+
     public Command turnCounterClockwise360() {
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
         return runOnce(() -> {
             double currentPos = motor.getRotorPosition().getValueAsDouble();
-            motorPID.setGoal(currentPos - 1); // 1 rotation forward
-        });      // return run(() -> {
-        //
-        // }); // run() returns a command that repeats 50x per second until canceled or interrupted
+            goalPosition = currentPos - 1.0; // 1 rotation backward
+            motorPID.setGoal(goalPosition);
+        });
     }
-    
-    @Override // Rewrites (adds content to) a method from SubsystemBase
+
+    @Override
     public void periodic() {
-        // This method will be called once per scheduler run (50 times per second)
         double position = motor.getRotorPosition().getValueAsDouble();
-        double output = motorPID.calculate((position));
+        double output = motorPID.calculate(position);
+
+        // optional: clamp voltage to safe range
+        double maxVoltage = 12.0;
+        if (output > maxVoltage) output = maxVoltage;
+        if (output < -maxVoltage) output = -maxVoltage;
 
         motor.setVoltage(output);
-        }
     }
-
+}
