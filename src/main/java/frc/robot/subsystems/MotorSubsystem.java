@@ -12,18 +12,17 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 public class MotorSubsystem extends SubsystemBase {
     // Class variables (ints, doubles, motor objects) go here
-    private final TalonFX motor;
-    private final Encoder motorEncoder;
-    private final ProfiledPIDController motorPID;
+    private final TalonFX motor = new TalonFX(MotorConstants.motorCanId);
+    private final Encoder motorEncoder = new Encoder(0,1);
+    private final TrapezoidProfile.Constraints constraints = 
+        new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA);
+    private final ProfiledPIDController motorPID = 
+        new ProfiledPIDController(MotorConstants.kp, MotorConstants.ki, MotorConstants.kd, constraints);
 
     /** Creates a new MotorSubsystem. */
     public MotorSubsystem() {
-        motor = new TalonFX(MotorConstants.motorCanId);
-        motorEncoder = new Encoder(0, 1); //placeholder
-        motorPID = new ProfiledPIDController(MotorConstants.kp, MotorConstants.ki, MotorConstants.kd,
-            new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA));
         motorPID.setTolerance(MotorConstants.tolerance);
-        motorPID.setGoal(0); //reset goal
+        motor.setPosition(0); //reset goal
         }
 
     /**
@@ -53,7 +52,6 @@ public class MotorSubsystem extends SubsystemBase {
     @Override // Rewrites (adds content to) a method from SubsystemBase
     public void periodic() {
         // This method will be called once per scheduler run (50 times per second)
-        double pidCalc = motorPID.calculate(motorEncoder.getDistance());
-        motor.set(pidCalc);
+        motor.setVoltage(motorPID.calculate(motorEncoder.getDistance()));
     }
 }
