@@ -52,6 +52,11 @@ public class MotorSubsystem extends SubsystemBase {
     @Override // Rewrites (adds content to) a method from SubsystemBase
     public void periodic() {
         // This method will be called once per scheduler run (50 times per second)
-        motor.setVoltage(motorPID.calculate(motorEncoder.getDistance()));
+        double output = motorPID.calculate((motorEncoder.getDistance()));
+        if (motorPID.atGoal()) {
+            motor.setVoltage(0);
+        } else {
+            motor.setVoltage(output);
+        }
     }
 }
