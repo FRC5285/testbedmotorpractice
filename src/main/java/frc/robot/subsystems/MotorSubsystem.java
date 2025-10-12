@@ -31,8 +31,11 @@ public class MotorSubsystem extends SubsystemBase {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
         return runOnce(() -> {
-            motorPID.setGoal(1);
-        });    }
+            double currentPos = motor.getRotorPosition().getValueAsDouble();
+            motorPID.setGoal(currentPos + 1); // 1 rotation forward
+        });
+
+    }
     /**
      * Creates a command that turns the motor shaft 360 degrees counterclockwise.
      *
@@ -42,8 +45,9 @@ public class MotorSubsystem extends SubsystemBase {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
         return runOnce(() -> {
-            motorPID.setGoal(-1);
-        });        // return run(() -> {
+            double currentPos = motor.getRotorPosition().getValueAsDouble();
+            motorPID.setGoal(currentPos - 1); // 1 rotation forward
+        });      // return run(() -> {
         //
         // }); // run() returns a command that repeats 50x per second until canceled or interrupted
     }

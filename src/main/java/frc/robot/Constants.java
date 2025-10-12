@@ -15,7 +15,7 @@ public final class Constants {
 
     public static class MotorConstants {
         // Constants for the motor go here
-        public static final double kp = 1.0;
+        public static final double kp = 0.1;
         public static final double ki = 0.1;
         public static final double kd = 0.1;
         public static final double maxV = 3.5;
