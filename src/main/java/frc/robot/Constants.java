@@ -1,6 +1,5 @@
 package frc.robot;
 
-git 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -19,15 +18,15 @@ public final class Constants {
 
         /** The CAN ID for the motor */
         public static final int motorCanId = 1;
-        public static final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
-        static {
-            motorConfig.Slot0.kP = 10.0;
-            motorConfig.Slot0.kI = 0.0;
-            motorConfig.Slot0.kD = 1.0;
-            motorConfig.Slot0.kV = 0.12;
 
-            motorConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0;
-            motorConfig.MotionMagic.MotionMagicAcceleration = 200.0;
+        public static final double kP = 0.1;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kF = 0.0;
+
+        public static final double maxVelocity = 5000;
+        public static final double maxAcceleration = 3000;
+        
 
         }
 
