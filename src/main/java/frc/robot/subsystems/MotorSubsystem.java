@@ -20,7 +20,6 @@ public class MotorSubsystem extends SubsystemBase {
     /** Creates a new MotorSubsystem. */
     public MotorSubsystem() {
         motorPID.setTolerance(MotorConstants.tolerance);
-        motor.setPosition(0); //reset goal
         }
 
     /**
@@ -32,7 +31,6 @@ public class MotorSubsystem extends SubsystemBase {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
         return runOnce(() -> {
-            motorPID.reset(motor.getRotorPosition().getValueAsDouble());
             motorPID.setGoal(1);
         });    }
     /**
@@ -44,7 +42,6 @@ public class MotorSubsystem extends SubsystemBase {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
         return runOnce(() -> {
-            motorPID.reset(motor.getRotorPosition().getValueAsDouble());
             motorPID.setGoal(-1);
         });        // return run(() -> {
         //
