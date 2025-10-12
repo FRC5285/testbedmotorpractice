@@ -18,5 +18,14 @@ public final class Constants {
 
         /** The CAN ID for the motor */
         public static final int motorCanId = 0;
+        public static final int encoderA = 1;
+        public static final int encoderB = 2;
+
+        public static final double kP = 4.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
+        public static final double maxV = 3.5;
+        public static final double maxA = 2.5;
     }
 }
