@@ -58,7 +58,7 @@ public class MotorSubsystem extends SubsystemBase {
         */
 
         return runOnce(() -> {
-            motorPID.setGoal(0);
+            motorPID.setGoal(360);
             //thisMotor.set(this.motorPID.calculate(thisEncoder.getDistance()));
         });
 
