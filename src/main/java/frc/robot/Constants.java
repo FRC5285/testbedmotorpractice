@@ -15,8 +15,13 @@ public final class Constants {
 
     public static class MotorConstants {
         // Constants for the motor go here
-
+        public static final double kp = 4.2;
+        public static final double ki = 6.7;
+        public static final double kd = 6.9;
+        public static final double maxV = 3.5;
+        public static final double maxA = 2.5;
         /** The CAN ID for the motor */
         public static final int motorCanId = 0;
+        public static final double tolerance = 0.025;
     }
 }
