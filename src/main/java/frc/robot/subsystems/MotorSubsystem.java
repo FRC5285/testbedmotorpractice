@@ -3,41 +3,45 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax; // WPILib motor
-
+import com.ctre.phoenix6.hardware.WPI_TalonFX;
+import com.ctre.phoenix6.controls.PositionVelocityControl;
 import frc.robot.Constants.MotorConstants;
 
 public class MotorSubsystem extends SubsystemBase {
 
-    // Motor object using WPILib
-    private final PWMSparkMax m_motor;
-
-    // Target rotations (simulated)
+    private final WPI_TalonFX m_motor;
     private double targetPositionRotations = 0;
 
-    /** Creates a new MotorSubsystem. */
     public MotorSubsystem() {
-        m_motor = new PWMSparkMax(MotorConstants.motorCanId); // CAN ID or PWM channel
+        m_motor = new WPI_TalonFX(MotorConstants.motorCanId);
+
+        // Apply PID constants
+        m_motor.getPIDController().setP(MotorConstants.kP);
+        m_motor.getPIDController().setI(MotorConstants.kI);
+        m_motor.getPIDController().setD(MotorConstants.kD);
+        m_motor.getPIDController().setFF(MotorConstants.kF);
     }
 
-    /** Turn motor 360° clockwise (simulated). */
+    // Clockwise 360° rotation
     public Command turnClockwise360() {
         return runOnce(() -> {
-            targetPositionRotations += 1.0;
-            m_motor.set(1.0); // full speed
+            targetPositionRotations += 1.0; // 1 rotation clockwise
+            m_motor.setControl(new PositionVelocityControl(targetPositionRotations, 0));
         });
     }
 
-    /** Turn motor 360° counterclockwise (simulated). */
+    // Counterclockwise 360° rotation
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
-            targetPositionRotations -= 1.0;
-            m_motor.set(-1.0); // full speed
+            targetPositionRotations -= 1.0; // 1 rotation counterclockwise
+            m_motor.setControl(new PositionVelocityControl(targetPositionRotations, 0));
         });
     }
 
     @Override
     public void periodic() {
+        // Show telemetry on SmartDashboard
+        SmartDashboard.putNumber("Motor Rotations", m_motor.getPosition().getValue());
         SmartDashboard.putNumber("Target Rotations", targetPositionRotations);
     }
 }
