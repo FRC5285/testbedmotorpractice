@@ -20,10 +20,10 @@ import static edu.wpi.first.units.Units.Rotations;
 public class MotorSubsystem extends SubsystemBase {
     // Class variables (ints, doubles, motor objects) go here
     private final TalonFX thisMotor;
-    //private final Encoder thisEncoder;
+    private final Encoder thisEncoder;
     //private final ProfiledPIDController thisPID;
     private boolean motorOverride = false;
-    private PIDController motorPID = new PIDController(1.0, 0, 0);
+    private final ProfiledPIDController motorPID;
 
     /** Creates a new MotorSubsystem. */
     public MotorSubsystem() {
@@ -31,6 +31,13 @@ public class MotorSubsystem extends SubsystemBase {
         thisMotor.setPosition(0);
         SendableRegistry.add(this, "Motor");
         SmartDashboard.putData(this);
+
+        thisEncoder = new Encoder(MotorConstants.encoderA, MotorConstants.encoderB);
+
+
+        motorPID = new ProfiledPIDController(MotorConstants.kP, MotorConstants.kI, MotorConstants.kD,
+            new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA)
+        );
     }
 
     /**
@@ -41,12 +48,20 @@ public class MotorSubsystem extends SubsystemBase {
     public Command turnClockwise360() {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
+        /*
         return runOnce(() -> {this.motorPID.reset(); this.motorPID.setSetpoint(MotorConstants.rotations);})
         .andThen(run(() -> {
             thisMotor.set(Math.max(this.motorPID.calculate(thisMotor.getPosition().getValue().in(Rotations)), 0.0));
         }))
         .until(() -> Math.abs(thisMotor.getPosition().getValue().in(Rotations)) >= MotorConstants.rotations)
         .andThen(this.stopClimb());
+        */
+
+        return runOnce(() -> {
+            motorPID.setGoal(0);
+            //thisMotor.set(this.motorPID.calculate(thisEncoder.getDistance()));
+        });
+
         // return run(() -> {
         //
         // }); // run() returns a command that repeats 50x per second until canceled or interrupted
@@ -60,13 +75,15 @@ public class MotorSubsystem extends SubsystemBase {
     public Command turnCounterClockwise360() {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
+        /*
         return runOnce(() -> {this.motorPID.reset(); this.motorPID.setSetpoint(MotorConstants.rotations2);})
         .andThen(run(() -> {
             thisMotor.set(Math.max(this.motorPID.calculate(thisMotor.getPosition().getValue().in(Rotations)), 0.0));
         }))
         .until(() -> Math.abs(thisMotor.getPosition().getValue().in(Rotations)) >= MotorConstants.rotations2)
         .andThen(this.stopClimb());
-        // return run(() -> {
+        */
+        return runOnce(() -> {});
         //
         // }); // run() returns a command that repeats 50x per second until canceled or interrupted
     }
@@ -79,6 +96,7 @@ public class MotorSubsystem extends SubsystemBase {
     @Override // Rewrites (adds content to) a method from SubsystemBase
     public void periodic() {
         // This method will be called once per scheduler run (50 times per second)
-        
+        thisMotor.set(this.motorPID.calculate(thisEncoder.getDistance()));
+        if (motorPID.atGoal()) thisMotor.stopMotor();
     }
 }
