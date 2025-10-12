@@ -59,7 +59,7 @@ public class MotorSubsystem extends SubsystemBase {
         */
 
         return runOnce(() -> {
-            motorPID.setGoal(thisMotor.getRotorPosition().getValueAsDouble() + 1);
+            motorPID.setGoal(thisMotor.getRotorPosition().getValueAsDouble() + 360);
             //thisMotor.set(this.motorPID.calculate(thisEncoder.getDistance()));
         });
 
@@ -74,7 +74,7 @@ public class MotorSubsystem extends SubsystemBase {
      * @return a command that turns the motor shaft 360 degrees counterclockwise.
      */
     public Command turnCounterClockwise360() {
-        motorPID.setGoal(thisMotor.getRotorPosition().getValueAsDouble() - 1);
+        motorPID.setGoal(thisMotor.getRotorPosition().getValueAsDouble() - 360);
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
         /*
