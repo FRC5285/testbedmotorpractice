@@ -13,7 +13,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 public class MotorSubsystem extends SubsystemBase {
     // Class variables (ints, doubles, motor objects) go here
     private final TalonFX motor = new TalonFX(MotorConstants.motorCanId);
-    private final Encoder motorEncoder = new Encoder(0,1);
     private final TrapezoidProfile.Constraints constraints = 
         new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA);
     private final ProfiledPIDController motorPID = 
@@ -48,11 +47,12 @@ public class MotorSubsystem extends SubsystemBase {
         //
         // }); // run() returns a command that repeats 50x per second until canceled or interrupted
     }
-
+    
     @Override // Rewrites (adds content to) a method from SubsystemBase
     public void periodic() {
         // This method will be called once per scheduler run (50 times per second)
-        double output = motorPID.calculate((motorEncoder.getDistance()));
+        double position = motor.getRotorPosition().getValueAsDouble();
+        double output = motorPID.calculate((position));
         if (motorPID.atGoal()) {
             motor.setVoltage(0);
         } else {
