@@ -19,6 +19,17 @@ public final class Constants {
 
         /** The CAN ID for the motor */
         public static final int motorCanId = 1;
+        public static final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+        static {
+            motorConfig.Slot0.kP = 10.0;
+            motorConfig.Slot0.kI = 0.0;
+            motorConfig.Slot0.kD = 1.0;
+            motorConfig.Slot0.kV = 0.12;
+
+            motorConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0;
+            motorConfig.MotionMagic.MotionMagicAcceleration = 200.0;
+
+        }
 
     }
 }
