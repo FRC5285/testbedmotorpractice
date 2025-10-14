@@ -23,6 +23,9 @@ public class MotorSubsystem extends SubsystemBase {
             new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA)
         );
 
+        motorPID.reset(0);
+        goalRotations = 0;
+
         SmartDashboard.putData("motor PID", motorPID);
     }
 
@@ -56,7 +59,7 @@ public class MotorSubsystem extends SubsystemBase {
         double output = motorPID.calculate(currentPosition);
 
         output = Math.max(0.0, output);
-        thisMotor.set(output);
+        thisMotor.setVoltage(output);
 
         // SmartDashboard.putNumber("output", output);
         // SmartDashboard.putNumber("currentPosition", currentPosition);
