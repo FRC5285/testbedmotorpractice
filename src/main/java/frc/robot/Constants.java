@@ -22,8 +22,8 @@ public final class Constants {
         public static final int encoderB = 2;
 
         public static final double kP = 0.4;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
+        public static final double kI = 0.1;
+        public static final double kD = 0.1;
 
         public static final double maxV = 3.5;
         public static final double maxA = 2.5;

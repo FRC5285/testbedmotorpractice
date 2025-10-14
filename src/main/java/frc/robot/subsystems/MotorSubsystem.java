@@ -34,7 +34,9 @@ public class MotorSubsystem extends SubsystemBase {
             double current = thisMotor.getRotorPosition().getValueAsDouble();
             goalRotations = current + 1.0; // +1 rotation so clockwise
             motorPID.setGoal(goalRotations);
-        });
+        }).andThen(run(this::updatePID)
+        .until(() -> motorPID.atGoal())
+        .andThen(stopClimb()));
     }
 
     public Command turnCounterClockwise360() {
@@ -43,11 +45,13 @@ public class MotorSubsystem extends SubsystemBase {
             double current = thisMotor.getRotorPosition().getValueAsDouble();
             goalRotations = current - 1.0; // -1 rotation (coutnerclockwise)
             motorPID.setGoal(goalRotations);
-        });
+        }).andThen(run(this::updatePID)
+        .until(() -> motorPID.atGoal())
+        .andThen(stopClimb()));
     }
 
-    public void stopClimb() {
-        thisMotor.stopMotor();
+    public Command stopClimb() {
+        return runOnce(thisMotor::stopMotor);
     }
 
     public void resetMotor() {
@@ -62,7 +66,7 @@ public class MotorSubsystem extends SubsystemBase {
         double currentPosition = thisMotor.getRotorPosition().getValueAsDouble();
         double output = motorPID.calculate(currentPosition);
 
-        output = Math.max(0.0, output);
+        output = Math.max(-1.0, Math.min(1.0, output));
         thisMotor.set(output);
 
         // SmartDashboard.putNumber("output", output);
@@ -73,7 +77,6 @@ public class MotorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         updatePID();
-        if (motorPID.atGoal()) stopClimb();
         System.out.println(thisMotor.getRotorPosition().getValueAsDouble());
     }
 }
