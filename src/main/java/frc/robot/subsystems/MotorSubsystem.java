@@ -24,6 +24,7 @@ public class MotorSubsystem extends SubsystemBase {
     public Command turnClockwise360() {
         return runOnce(() -> {
             double currentPos = motor.getRotorPosition().getValueAsDouble();
+            motorPID.reset(currentPos); // reset so the profile starts from current pos
             goalPosition = currentPos + 1.0; // one rotation forward
             motorPID.setGoal(goalPosition);
             active = true;
@@ -33,6 +34,7 @@ public class MotorSubsystem extends SubsystemBase {
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
             double currentPos = motor.getRotorPosition().getValueAsDouble();
+            motorPID.reset(currentPos); // reset here too
             goalPosition = currentPos - 1.0; // one rotation backward
             motorPID.setGoal(goalPosition);
             active = true;
@@ -46,18 +48,13 @@ public class MotorSubsystem extends SubsystemBase {
         double position = motor.getRotorPosition().getValueAsDouble();
         double output = motorPID.calculate(position);
 
-        // stop once the goal is reached
         if (motorPID.atGoal()) {
             motor.setVoltage(0);
             active = false;
             return;
         }
 
-        // clamp output
-        double maxVoltage = 12.0;
-        if (output > maxVoltage) output = maxVoltage;
-        if (output < -maxVoltage) output = -maxVoltage;
-
+        output = Math.max(-12.0, Math.min(12.0, output));
         motor.setVoltage(output);
     }
 }
