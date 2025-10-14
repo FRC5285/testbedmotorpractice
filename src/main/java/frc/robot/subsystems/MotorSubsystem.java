@@ -55,13 +55,12 @@ public class MotorSubsystem extends SubsystemBase {
         double currentPosition = thisMotor.getRotorPosition().getValueAsDouble();
         double output = motorPID.calculate(currentPosition);
 
-        // output between -1 and 1
-        output = Math.max(-1.0, Math.min(1.0, output));
+        output = Math.max(0.0, output);
         thisMotor.set(output);
 
-        SmartDashboard.putNumber("output", output);
-        SmartDashboard.putNumber("currentPosition", currentPosition);
-        SmartDashboard.putNumber("goalRotations", goalRotations);
+        // SmartDashboard.putNumber("output", output);
+        // SmartDashboard.putNumber("currentPosition", currentPosition);
+        // SmartDashboard.putNumber("goalRotations", goalRotations);
     }
 
     @Override
