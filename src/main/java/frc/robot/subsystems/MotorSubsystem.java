@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorConstants;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -55,7 +57,7 @@ public class MotorSubsystem extends SubsystemBase {
     }
 
     public void resetMotor() {
-        //thisMotor.setPosition(0);
+        thisMotor.setPosition(0);
         motorPID.setGoal(0);
         //motorPID.reset(0);
         goalRotations = 0;
@@ -64,9 +66,9 @@ public class MotorSubsystem extends SubsystemBase {
     // update PID
     private void updatePID() {
         double currentPosition = thisMotor.getRotorPosition().getValueAsDouble();
-        double output = motorPID.calculate(currentPosition);
+        double output = this.motorPID.calculate(thisMotor.getPosition().getValue().in(Rotations));
 
-        output = Math.max(-1.0, Math.min(1.0, output));
+        output = Math.max(0.0, output);
         thisMotor.set(output);
 
         // SmartDashboard.putNumber("output", output);
@@ -76,7 +78,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        updatePID();
+        //updatePID();
         System.out.println(thisMotor.getRotorPosition().getValueAsDouble());
     }
 }
