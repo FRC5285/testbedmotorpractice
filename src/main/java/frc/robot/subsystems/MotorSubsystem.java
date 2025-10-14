@@ -23,14 +23,14 @@ public class MotorSubsystem extends SubsystemBase {
             new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA)
         );
 
-        motorPID.reset(0);
-        goalRotations = 0;
+        resetMotor();
 
         SmartDashboard.putData("motor PID", motorPID);
     }
 
     public Command turnClockwise360() {
         return runOnce(() -> {
+            resetMotor();
             double current = thisMotor.getRotorPosition().getValueAsDouble();
             goalRotations = current + 1.0; // +1 rotation so clockwise
             motorPID.setGoal(goalRotations);
@@ -41,6 +41,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
+            resetMotor();
             double current = thisMotor.getRotorPosition().getValueAsDouble();
             goalRotations = current - 1.0; // -1 rotation (coutnerclockwise)
             motorPID.setGoal(goalRotations);
@@ -51,6 +52,12 @@ public class MotorSubsystem extends SubsystemBase {
 
     public Command stopClimb() {
         return runOnce(thisMotor::stopMotor);
+    }
+
+    public void resetMotor() {
+        thisMotor.setPosition(0);
+        motorPID.reset(0);
+        goalRotations = 0;
     }
 
     // update PID
