@@ -65,8 +65,8 @@ public class MotorSubsystem extends SubsystemBase {
 
     // update PID
     private void updatePID() {
-        double currentPosition = thisMotor.getRotorPosition().getValueAsDouble();
-        double output = this.motorPID.calculate(thisMotor.getPosition().getValue().in(Rotations));
+        double currentPosition = thisMotor.getPosition().getValueAsDouble();
+        double output = this.motorPID.calculate(currentPosition);
 
         output = Math.max(0.0, output);
         thisMotor.set(output);
