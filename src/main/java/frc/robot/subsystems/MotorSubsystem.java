@@ -58,7 +58,7 @@ public class MotorSubsystem extends SubsystemBase {
         thisMotor.setPosition(0);
         motorPID.setGoal(0);
         //motorPID.reset(0);
-        //goalRotations = 0;
+        goalRotations = 0;
     }
 
     // update PID
@@ -67,7 +67,7 @@ public class MotorSubsystem extends SubsystemBase {
         double output = motorPID.calculate(currentPosition);
 
         output = Math.max(0.0, output);
-        thisMotor.setVoltage(output);
+        thisMotor.set(output);
 
         // SmartDashboard.putNumber("output", output);
         // SmartDashboard.putNumber("currentPosition", currentPosition);
