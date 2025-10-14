@@ -1,104 +1,76 @@
 package frc.robot.subsystems;
 
-// Imported libraries and files
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.MotorConstants; // Constants for the motor, refer with MotorConstants.[variable name]
+import frc.robot.Constants.MotorConstants;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.Encoder;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.util.sendable.SendableRegistry;
-
-import static edu.wpi.first.units.Units.Rotations;
 
 public class MotorSubsystem extends SubsystemBase {
-    // Class variables (ints, doubles, motor objects) go here
     private final TalonFX thisMotor;
-    private final Encoder thisEncoder;
-    //private final ProfiledPIDController thisPID;
-    private boolean motorOverride = false;
     private final ProfiledPIDController motorPID;
+    private double goalRotations = 0;
 
-    /** Creates a new MotorSubsystem. */
     public MotorSubsystem() {
         thisMotor = new TalonFX(MotorConstants.motorCanId);
         thisMotor.setPosition(0);
-        
-        SendableRegistry.add(this, "Motor");
-        SmartDashboard.putData(this);
 
-        thisEncoder = new Encoder(MotorConstants.encoderA, MotorConstants.encoderB);
-        thisEncoder.setDistancePerPulse(1.0 / 360.0 * 2.0 * Math.PI * 1.5);
-
-        motorPID = new ProfiledPIDController(MotorConstants.kP, MotorConstants.kI, MotorConstants.kD,
+        motorPID = new ProfiledPIDController(
+            MotorConstants.kP, MotorConstants.kI, MotorConstants.kD,
             new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA)
         );
+
+        SmartDashboard.putData("Motor PID", motorPID);
     }
 
-    /**
-     * Creates a command that turns the motor shaft 360 degrees clockwise.
-     *
-     * @return a command that turns the motor shaft 360 degrees clockwise.
-     */
+    /** Turns the motor shaft one full rotation clockwise (positive). */
     public Command turnClockwise360() {
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
-        /*
-        return runOnce(() -> {this.motorPID.reset(); this.motorPID.setSetpoint(MotorConstants.rotations);})
-        .andThen(run(() -> {
-            thisMotor.set(Math.max(this.motorPID.calculate(thisMotor.getPosition().getValue().in(Rotations)), 0.0));
-        }))
-        .until(() -> Math.abs(thisMotor.getPosition().getValue().in(Rotations)) >= MotorConstants.rotations)
-        .andThen(this.stopClimb());
-        */
-
         return runOnce(() -> {
-            motorPID.setGoal(thisMotor.getRotorPosition().getValueAsDouble() + 360);
-            //thisMotor.set(this.motorPID.calculate(thisEncoder.getDistance()));
-        });
-
-        // return run(() -> {
-        //
-        // }); // run() returns a command that repeats 50x per second until canceled or interrupted
+            double current = thisMotor.getRotorPosition().getValueAsDouble();
+            goalRotations = current + 1.0; // +1 rotation
+            motorPID.setGoal(goalRotations);
+        }).andThen(run(this::updatePID)
+        .until(() -> motorPID.atGoal())
+        .andThen(stopClimb()));
     }
 
-    /**
-     * Creates a command that turns the motor shaft 360 degrees counterclockwise.
-     *
-     * @return a command that turns the motor shaft 360 degrees counterclockwise.
-     */
+    /** Turns the motor shaft one full rotation counterclockwise (negative). */
     public Command turnCounterClockwise360() {
-        motorPID.setGoal(thisMotor.getRotorPosition().getValueAsDouble() - 360);
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
-        /*
-        return runOnce(() -> {this.motorPID.reset(); this.motorPID.setSetpoint(MotorConstants.rotations2);})
-        .andThen(run(() -> {
-            thisMotor.set(Math.max(this.motorPID.calculate(thisMotor.getPosition().getValue().in(Rotations)), 0.0));
-        }))
-        .until(() -> Math.abs(thisMotor.getPosition().getValue().in(Rotations)) >= MotorConstants.rotations2)
-        .andThen(this.stopClimb());
-        */
-        return runOnce(() -> {});
-        //
-        // }); // run() returns a command that repeats 50x per second until canceled or interrupted
+        return runOnce(() -> {
+            double current = thisMotor.getRotorPosition().getValueAsDouble();
+            goalRotations = current - 1.0; // -1 rotation
+            motorPID.setGoal(goalRotations);
+        }).andThen(run(this::updatePID)
+        .until(() -> motorPID.atGoal())
+        .andThen(stopClimb()));
     }
 
+    /** Stops the motor */
     public Command stopClimb() {
-        return runOnce(() -> thisMotor.stopMotor());
+        return runOnce(thisMotor::stopMotor);
     }
 
+    /** Called periodically to update the PID output */
+    private void updatePID() {
+        double currentPosition = thisMotor.getRotorPosition().getValueAsDouble();
+        double output = motorPID.calculate(currentPosition);
 
-    @Override // Rewrites (adds content to) a method from SubsystemBase
+        // Clamp output between -1 and 1
+        output = Math.max(-1.0, Math.min(1.0, output));
+        thisMotor.set(output);
+
+        SmartDashboard.putNumber("Motor Output", output);
+        SmartDashboard.putNumber("Motor Position", currentPosition);
+        SmartDashboard.putNumber("Motor Goal", goalRotations);
+    }
+
+    @Override
     public void periodic() {
-        // This method will be called once per scheduler run (50 times per second)
-        thisMotor.setPosition(this.motorPID.calculate(thisMotor.getRotorPosition().getValueAsDouble()));
-        //if (motorPID.atGoal()) thisMotor.stopMotor();
+        // You could also call updatePID() here if you always want the PID running
     }
 }
+
+
