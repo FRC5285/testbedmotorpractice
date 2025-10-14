@@ -21,7 +21,7 @@ public final class Constants {
         public static final int encoderA = 1;
         public static final int encoderB = 2;
 
-        public static final double kP = 4.0;
+        public static final double kP = 0.4;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
 

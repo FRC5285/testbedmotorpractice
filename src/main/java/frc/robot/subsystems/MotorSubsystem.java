@@ -16,7 +16,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     public MotorSubsystem() {
         thisMotor = new TalonFX(MotorConstants.motorCanId);
-        thisMotor.setPosition(0);
+        //thisMotor.setPosition(0);
 
         motorPID = new ProfiledPIDController(
             MotorConstants.kP, MotorConstants.kI, MotorConstants.kD,
@@ -32,7 +32,7 @@ public class MotorSubsystem extends SubsystemBase {
         return runOnce(() -> {
             resetMotor();
             double current = thisMotor.getRotorPosition().getValueAsDouble();
-            goalRotations = current + 1.0; // +1 rotation so clockwise
+            goalRotations = 1.0; // +1 rotation so clockwise
             motorPID.setGoal(goalRotations);
         }).andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
@@ -43,7 +43,7 @@ public class MotorSubsystem extends SubsystemBase {
         return runOnce(() -> {
             resetMotor();
             double current = thisMotor.getRotorPosition().getValueAsDouble();
-            goalRotations = current - 1.0; // -1 rotation (coutnerclockwise)
+            goalRotations = -1.0; // -1 rotation (coutnerclockwise)
             motorPID.setGoal(goalRotations);
         }).andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
@@ -57,7 +57,7 @@ public class MotorSubsystem extends SubsystemBase {
     public void resetMotor() {
         thisMotor.setPosition(0);
         motorPID.reset(0);
-        goalRotations = 0;
+        //goalRotations = 0;
     }
 
     // update PID
@@ -75,7 +75,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        updatePID();
+        //updatePID();
     }
 }
 
