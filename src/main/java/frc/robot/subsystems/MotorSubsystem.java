@@ -16,7 +16,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     public MotorSubsystem() {
         thisMotor = new TalonFX(MotorConstants.motorCanId);
-        //thisMotor.setPosition(0);
+        thisMotor.setPosition(0);
 
         motorPID = new ProfiledPIDController(
             MotorConstants.kP, MotorConstants.kI, MotorConstants.kD,
@@ -34,9 +34,7 @@ public class MotorSubsystem extends SubsystemBase {
             double current = thisMotor.getRotorPosition().getValueAsDouble();
             goalRotations = current + 1.0; // +1 rotation so clockwise
             motorPID.setGoal(goalRotations);
-        }).andThen(run(this::updatePID)
-        .until(() -> motorPID.atGoal())
-        .andThen(stopClimb()));
+        });
     }
 
     public Command turnCounterClockwise360() {
@@ -45,17 +43,15 @@ public class MotorSubsystem extends SubsystemBase {
             double current = thisMotor.getRotorPosition().getValueAsDouble();
             goalRotations = current - 1.0; // -1 rotation (coutnerclockwise)
             motorPID.setGoal(goalRotations);
-        }).andThen(run(this::updatePID)
-        .until(() -> motorPID.atGoal())
-        .andThen(stopClimb()));
+        });
     }
 
-    public Command stopClimb() {
-        return runOnce(thisMotor::stopMotor);
+    public void stopClimb() {
+        thisMotor.stopMotor();
     }
 
     public void resetMotor() {
-        thisMotor.setPosition(0);
+        //thisMotor.setPosition(0);
         motorPID.setGoal(0);
         //motorPID.reset(0);
         goalRotations = 0;
@@ -76,7 +72,8 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //updatePID();
+        updatePID();
+        if (motorPID.atGoal()) stopClimb();
         System.out.println(thisMotor.getRotorPosition().getValueAsDouble());
     }
 }
