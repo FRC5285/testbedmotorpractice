@@ -23,53 +23,50 @@ public class MotorSubsystem extends SubsystemBase {
             new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA)
         );
 
-        SmartDashboard.putData("Motor PID", motorPID);
+        SmartDashboard.putData("motor PID", motorPID);
     }
 
-    /** Turns the motor shaft one full rotation clockwise (positive). */
     public Command turnClockwise360() {
         return runOnce(() -> {
             double current = thisMotor.getRotorPosition().getValueAsDouble();
-            goalRotations = current + 1.0; // +1 rotation
+            goalRotations = current + 1.0; // +1 rotation so clockwise
             motorPID.setGoal(goalRotations);
         }).andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
         .andThen(stopClimb()));
     }
 
-    /** Turns the motor shaft one full rotation counterclockwise (negative). */
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
             double current = thisMotor.getRotorPosition().getValueAsDouble();
-            goalRotations = current - 1.0; // -1 rotation
+            goalRotations = current - 1.0; // -1 rotation (coutnerclockwise)
             motorPID.setGoal(goalRotations);
         }).andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
         .andThen(stopClimb()));
     }
 
-    /** Stops the motor */
     public Command stopClimb() {
         return runOnce(thisMotor::stopMotor);
     }
 
-    /** Called periodically to update the PID output */
+    // update PID
     private void updatePID() {
         double currentPosition = thisMotor.getRotorPosition().getValueAsDouble();
         double output = motorPID.calculate(currentPosition);
 
-        // Clamp output between -1 and 1
+        // output between -1 and 1
         output = Math.max(-1.0, Math.min(1.0, output));
         thisMotor.set(output);
 
-        SmartDashboard.putNumber("Motor Output", output);
-        SmartDashboard.putNumber("Motor Position", currentPosition);
-        SmartDashboard.putNumber("Motor Goal", goalRotations);
+        SmartDashboard.putNumber("output", output);
+        SmartDashboard.putNumber("currentPosition", currentPosition);
+        SmartDashboard.putNumber("goalRotations", goalRotations);
     }
 
     @Override
     public void periodic() {
-        // You could also call updatePID() here if you always want the PID running
+        updatePID();
     }
 }
 
