@@ -76,7 +76,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        updatePID();
+        //updatePID();
         System.out.println(thisMotor.getRotorPosition().getValueAsDouble());
     }
 }
