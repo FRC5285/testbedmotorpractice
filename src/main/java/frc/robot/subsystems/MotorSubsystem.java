@@ -65,10 +65,10 @@ public class MotorSubsystem extends SubsystemBase {
 
     // update PID
     private void updatePID() {
-        double currentPosition = thisMotor.getPosition().getValueAsDouble();
+        double currentPosition = thisMotor.getRotorPosition().getValueAsDouble();
         double output = this.motorPID.calculate(currentPosition);
 
-        output = Math.max(-1.0 , Math.min(1.0, output));
+        output = Math.max(0.0 , Math.min(1.0, output));
         thisMotor.set(output);
 
         // SmartDashboard.putNumber("output", output);
@@ -79,7 +79,7 @@ public class MotorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         //updatePID();
-        System.out.println(thisMotor.getPosition().getValueAsDouble());
+        System.out.println(thisMotor.getRotorPosition().getValueAsDouble());
         System.out.println(motorPID.atGoal());
         if (motorPID.atGoal()) {
             stopClimb();
