@@ -80,6 +80,7 @@ public class MotorSubsystem extends SubsystemBase {
     public void periodic() {
         //updatePID();
         System.out.println(thisMotor.getPosition().getValueAsDouble());
+        System.out.println(motorPID.atGoal());
     }
 }
 
