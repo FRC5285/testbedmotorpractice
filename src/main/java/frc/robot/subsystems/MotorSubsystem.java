@@ -34,7 +34,7 @@ public class MotorSubsystem extends SubsystemBase {
         return runOnce(() -> {
             resetMotor();
             double current = thisMotor.getRotorPosition().getValueAsDouble();
-            goalRotations = current + 1.0; // +1 rotation so clockwise
+            goalRotations = current + 360.0; // +1 rotation so clockwise
             motorPID.setGoal(goalRotations);
         }).andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
@@ -45,7 +45,7 @@ public class MotorSubsystem extends SubsystemBase {
         return runOnce(() -> {
             resetMotor();
             double current = thisMotor.getRotorPosition().getValueAsDouble();
-            goalRotations = current - 1.0; // -1 rotation (coutnerclockwise)
+            goalRotations = current - 360.0; // -1 rotation (coutnerclockwise)
             motorPID.setGoal(goalRotations);
         }).andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
