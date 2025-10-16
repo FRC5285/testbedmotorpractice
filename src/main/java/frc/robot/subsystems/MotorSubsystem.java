@@ -27,6 +27,7 @@ public class MotorSubsystem extends SubsystemBase {
 
         motorPID.setGoal(thisMotor.getRotorPosition().getValueAsDouble());
         motorPID.enableContinuousInput(0.0, 1.0);
+        motorPID.setTolerance(0.01);
 
         resetMotor();
 
@@ -92,7 +93,7 @@ public class MotorSubsystem extends SubsystemBase {
         thisMotor.set(calcAmt);
         if (motorPID.atGoal()) {
             stopClimb();
-            resetMotor();
+            //resetMotor();
         }
     }
 }
