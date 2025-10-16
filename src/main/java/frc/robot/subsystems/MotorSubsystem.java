@@ -92,7 +92,7 @@ public class MotorSubsystem extends SubsystemBase {
         double calcAmt = motorPID.calculate(thisMotor.getRotorPosition().getValueAsDouble());
         thisMotor.set(calcAmt);
         if (motorPID.atGoal()) {
-            stopClimb();
+            //stopClimb();
             //resetMotor();
         }
     }
