@@ -68,7 +68,7 @@ public class MotorSubsystem extends SubsystemBase {
         double currentPosition = thisMotor.getPosition().getValueAsDouble();
         double output = this.motorPID.calculate(currentPosition);
 
-        output = Math.max(0.0, output);
+        output = Math.max(-output, output);
         thisMotor.set(output);
 
         // SmartDashboard.putNumber("output", output);
