@@ -39,9 +39,10 @@ public class MotorSubsystem extends SubsystemBase {
             double current = thisMotor.getRotorPosition().getValueAsDouble();
             goalRotations = current + 1.0; // +1 rotation so clockwise
             motorPID.setGoal(motorPID.getSetpoint().position + 1.0);
-        }).andThen(run(this::updatePID)
+        });
+        /*.andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
-        .andThen(stopClimb()));
+        .andThen(stopClimb()));*/
     }
 
     public Command turnCounterClockwise360() {
@@ -50,9 +51,10 @@ public class MotorSubsystem extends SubsystemBase {
             double current = thisMotor.getRotorPosition().getValueAsDouble();
             goalRotations = current - 1.0; // -1 rotation (coutnerclockwise)
             motorPID.setGoal(motorPID.getSetpoint().position - 1.0);
-        }).andThen(run(this::updatePID)
+        });
+        /*.andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
-        .andThen(stopClimb()));
+        .andThen(stopClimb()));*/
     }
 
     public Command stopClimb() {
@@ -60,8 +62,8 @@ public class MotorSubsystem extends SubsystemBase {
     }
 
     public void resetMotor() {
-        thisMotor.setPosition(0);
-        //motorPID.reset(0);
+        //thisMotor.setPosition(0);
+        motorPID.reset(thisMotor.getRotorPosition().getValueAsDouble());
         //motorPID.setGoal(0);
         //goalRotations = 0;
     }
@@ -86,6 +88,8 @@ public class MotorSubsystem extends SubsystemBase {
         //updatePID();
         //System.out.println(thisMotor.getRotorPosition().getValueAsDouble());
         //System.out.println(motorPID.atGoal());
+        double calcAmt = motorPID.calculate(thisMotor.getRotorPosition().getValueAsDouble());
+        thisMotor.set(calcAmt);
         if (motorPID.atGoal()) {
             stopClimb();
             resetMotor();
