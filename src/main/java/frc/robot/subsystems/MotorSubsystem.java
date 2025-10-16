@@ -81,6 +81,10 @@ public class MotorSubsystem extends SubsystemBase {
         //updatePID();
         System.out.println(thisMotor.getPosition().getValueAsDouble());
         System.out.println(motorPID.atGoal());
+        if (motorPID.atGoal()) {
+            stopClimb();
+            resetMotor();
+        }
     }
 }
 
