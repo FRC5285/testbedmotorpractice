@@ -25,6 +25,9 @@ public class MotorSubsystem extends SubsystemBase {
             new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA)
         );
 
+        motorPID.setGoal(thisMotor.getRotorPosition().getValueAsDouble());
+        motorPID.enableContinuousInput(0.0, 1.0);
+
         resetMotor();
 
         SmartDashboard.putData("motor PID", motorPID);
@@ -35,7 +38,7 @@ public class MotorSubsystem extends SubsystemBase {
             resetMotor();
             double current = thisMotor.getRotorPosition().getValueAsDouble();
             goalRotations = current + 1.0; // +1 rotation so clockwise
-            motorPID.setGoal(goalRotations);
+            motorPID.setGoal(motorPID.getSetpoint().position + 1.0);
         }).andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
         .andThen(stopClimb()));
@@ -46,7 +49,7 @@ public class MotorSubsystem extends SubsystemBase {
             //resetMotor();
             double current = thisMotor.getRotorPosition().getValueAsDouble();
             goalRotations = current - 1.0; // -1 rotation (coutnerclockwise)
-            motorPID.setGoal(goalRotations);
+            motorPID.setGoal(motorPID.getSetpoint().position - 1.0);
         }).andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
         .andThen(stopClimb()));
@@ -58,7 +61,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     public void resetMotor() {
         thisMotor.setPosition(0);
-        motorPID.reset(0);
+        //motorPID.reset(0);
         //motorPID.setGoal(0);
         //goalRotations = 0;
     }
@@ -68,8 +71,10 @@ public class MotorSubsystem extends SubsystemBase {
         double currentPosition = thisMotor.getRotorPosition().getValueAsDouble();
         double output = this.motorPID.calculate(currentPosition, goalRotations);
 
+        double calcAmt = motorPID.calculate(currentPosition);
+
         output = Math.max(0.0 , Math.min(1.0, output));
-        thisMotor.set(output);
+        thisMotor.set(calcAmt);
 
         // SmartDashboard.putNumber("output", output);
         // SmartDashboard.putNumber("currentPosition", currentPosition);
