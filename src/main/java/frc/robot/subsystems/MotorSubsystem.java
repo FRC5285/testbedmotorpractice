@@ -59,8 +59,8 @@ public class MotorSubsystem extends SubsystemBase {
     public void resetMotor() {
         thisMotor.setPosition(0);
         motorPID.reset(0);
-        motorPID.setGoal(0);
-        goalRotations = 0;
+        //motorPID.setGoal(0);
+        //goalRotations = 0;
     }
 
     // update PID
