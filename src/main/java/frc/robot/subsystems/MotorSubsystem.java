@@ -99,6 +99,7 @@ public class MotorSubsystem extends SubsystemBase {
         double calcAmt = motorPID.calculate(this.getCurrentPosition(), motorPID.getGoal());
         SmartDashboard.putNumber("calcAmt: ", calcAmt);
         SmartDashboard.putNumber("Motor Position: ", this.getCurrentPosition());
+        SmartDashboard.putBoolean("atGoal", motorPID.atGoal());
         if (motorOverride == false) this.thisMotor.set(calcAmt);
         if (motorPID.atGoal()) {
             motorOverride = true;
