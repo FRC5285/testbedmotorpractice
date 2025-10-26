@@ -34,6 +34,8 @@ public class MotorSubsystem extends SubsystemBase {
         // bsic profiling and pid
         // in init function, set slot 0 gains
         var slot0Configs = new Slot0Configs();
+        slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
+        slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
         slot0Configs.kP = 2.4; // An error of 1 rotation results in 2.4 V output
         slot0Configs.kI = 0; // no output for integrated error
         slot0Configs.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
@@ -59,7 +61,7 @@ public class MotorSubsystem extends SubsystemBase {
             final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
 
             // set position to 10 rotations
-            thisMotor.setControl(m_request.withPosition(-1));
+            thisMotor.setControl(m_request.withPosition(this.getCurrentPosition() + 1));
         });
         //return runOnce(() -> thisMotor.set(0.3));
         /*.andThen(run(this::updatePID)
@@ -73,7 +75,7 @@ public class MotorSubsystem extends SubsystemBase {
             final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
 
             // set position to 10 rotations
-            thisMotor.setControl(m_request.withPosition(-1));
+            thisMotor.setControl(m_request.withPosition(this.getCurrentPosition() -1));
         });
         //return runOnce(() -> thisMotor.set(-0.3));
         /*.andThen(run(this::updatePID)
