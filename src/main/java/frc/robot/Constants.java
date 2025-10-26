@@ -20,16 +20,16 @@ public final class Constants {
         public static final int motorCanId = 0;
 
         /** P value for motor*/
-        public static final double kP = 4.0;
+        public static final double kP = 0.5;
         /** I value for motor*/
         public static final double kI = 0.0;
         /** D value for motor*/
         public static final double kD = 0.0;
 
         /** Max acceleration of motor, in rotations/second/second */
-        public static final double maxAccel = 1.0;
+        public static final double maxAccel = 0.5;
 
         /** Max velocity of motor, in rotations/second */
-        public static final double maxVelocity = 2.0;
+        public static final double maxVelocity = 1.0;
     }
 }
