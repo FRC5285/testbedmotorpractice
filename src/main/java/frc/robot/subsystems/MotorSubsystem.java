@@ -27,16 +27,17 @@ public class MotorSubsystem extends SubsystemBase {
     public MotorSubsystem() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
         MotionMagicConfigs mm = new MotionMagicConfigs();
-        mm.MotionMagicCruiseVelocity = 5.0;   
-        mm.MotionMagicAcceleration = 10.0;    
+        mm.MotionMagicCruiseVelocity = 30.0;   
+        mm.MotionMagicAcceleration = 25.0;    
+        mm.MotionMagicJerk = 50.0;
         configs.MotionMagic = mm;
 
-        Slot0Configs slot0 = configs.Slot0;
+        Slot0Configs slot0 =configs.Slot0;
         slot0.kS = 0.08;
         slot0.kV = 0.11;
         slot0.kA = 0.01;
         slot0.kP = 12;
-        slot0.kI = 0.4;
+        slot0.kI = 0.1;
         slot0.kD = 0.4;
         configs.Slot0 = slot0;
 
@@ -74,6 +75,6 @@ public class MotorSubsystem extends SubsystemBase {
             targetPosition = 0;              // reset target
 
         }
-        SmartDashboard.putNumber("rotations", currentPos/2048);
+        SmartDashboard.putNumber("rotations", currentPos);
 }
 }
