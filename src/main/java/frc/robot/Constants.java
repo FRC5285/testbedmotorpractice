@@ -11,7 +11,7 @@ public final class Constants {
     public static final class MotorConstants {
         public static final int kMotorCanId = 1; // CAN ID of your Talon FX
         public static final double kP = 0.1;    // PID constants
-        public static final double kI = 0.0;
+        public static final double kI = 0.4;
         public static final double kD = 0.0;
     }
 }
