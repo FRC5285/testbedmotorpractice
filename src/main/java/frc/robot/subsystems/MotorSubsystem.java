@@ -67,19 +67,18 @@ public class MotorSubsystem extends SubsystemBase {
 
     public void resetMotor() {
         //thisMotor.setPosition(0);
-        motorPID.reset(thisMotor.getRotorPosition().getValueAsDouble());
+        motorPID.reset(this.getCurrentPosition());
         //motorPID.setGoal(0);
         //goalRotations = 0;
     }
 
     public boolean isAtSetpoint() {
-        this.motorOverride = true;
         return motorPID.atSetpoint();
       }
 
     // update PID
     private void updatePID() {
-        double currentPosition = thisMotor.getRotorPosition().getValueAsDouble();
+        double currentPosition = thisMotor.getPosition().getValueAsDouble();
         double output = this.motorPID.calculate(currentPosition, goalRotations);
 
         double calcAmt = motorPID.calculate(currentPosition);
@@ -94,9 +93,14 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double calcAmt = motorPID.calculate(thisMotor.getPosition().getValueAsDouble());
+        double calcAmt = motorPID.calculate(this.getCurrentPosition());
         if (motorOverride == false) this.thisMotor.set(calcAmt);
     }
+
+    public double getCurrentPosition(){
+        double position = thisMotor.getPosition().getValueAsDouble();
+        return position < 0.0 ? position + 1.0 : position;
+      }
 }
 
 
