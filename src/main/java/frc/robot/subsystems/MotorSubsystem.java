@@ -6,7 +6,10 @@ import frc.robot.Constants.MotorConstants;
 
 import static edu.wpi.first.units.Units.Rotations;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -28,13 +31,22 @@ public class MotorSubsystem extends SubsystemBase {
             new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA)
         );
 
-        // Final target of 360 rot, 0 rps
-        TrapezoidProfile.State m_goal = new TrapezoidProfile.State(360, 0);
-        TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
+        // bsic profiling and pid
+        // in init function, set slot 0 gains
+        var slot0Configs = new Slot0Configs();
+        slot0Configs.kP = 2.4; // An error of 1 rotation results in 2.4 V output
+        slot0Configs.kI = 0; // no output for integrated error
+        slot0Configs.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
 
-        motorPID.setGoal(thisMotor.getRotorPosition().getValueAsDouble());
-        motorPID.enableContinuousInput(0.0, 1.0);
-        motorPID.setTolerance(0.01);
+        thisMotor.getConfigurator().apply(slot0Configs);
+
+        // Final target of 360 rot, 0 rps
+        //TrapezoidProfile.State m_goal = new TrapezoidProfile.State(360, 0);
+        //TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
+
+        //motorPID.setGoal(thisMotor.getRotorPosition().getValueAsDouble());
+        //motorPID.enableContinuousInput(0.0, 1.0);
+        //motorPID.setTolerance(0.01);
 
         resetMotor();
 
@@ -42,7 +54,13 @@ public class MotorSubsystem extends SubsystemBase {
     }
 
     public Command turnClockwise360() {
-        return runOnce(() -> motorPID.setGoal(1));
+        return runOnce(() -> {
+            // create a position closed-loop request, voltage output, slot 0 configs
+            final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
+
+            // set position to 10 rotations
+            thisMotor.setControl(m_request.withPosition(-1));
+        });
         //return runOnce(() -> thisMotor.set(0.3));
         /*.andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
@@ -50,7 +68,13 @@ public class MotorSubsystem extends SubsystemBase {
     }
 
     public Command turnCounterClockwise360() {
-        return runOnce(() -> motorPID.setGoal(-1));
+        return runOnce(() -> {
+            // create a position closed-loop request, voltage output, slot 0 configs
+            final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
+
+            // set position to 10 rotations
+            thisMotor.setControl(m_request.withPosition(-1));
+        });
         //return runOnce(() -> thisMotor.set(-0.3));
         /*.andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
@@ -96,15 +120,15 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double calcAmt = motorPID.calculate(this.getCurrentPosition(), motorPID.getGoal());
-        SmartDashboard.putNumber("calcAmt: ", calcAmt);
-        SmartDashboard.putNumber("Motor Position: ", this.getCurrentPosition());
-        SmartDashboard.putBoolean("atGoal", motorPID.atGoal());
-        if (motorOverride == false) this.thisMotor.set(calcAmt);
-        if (motorPID.atGoal()) {
-            motorOverride = true;
-            thisMotor.stopMotor();
-        }
+        // double calcAmt = motorPID.calculate(this.getCurrentPosition(), motorPID.getGoal());
+        // SmartDashboard.putNumber("calcAmt: ", calcAmt);
+        // SmartDashboard.putNumber("Motor Position: ", this.getCurrentPosition());
+        // SmartDashboard.putBoolean("atGoal", motorPID.atGoal());
+        // if (motorOverride == false) this.thisMotor.set(calcAmt);
+        // if (motorPID.atGoal()) {
+        //     motorOverride = true;
+        //     thisMotor.stopMotor();
+        // }
     }
 
     public double getCurrentPosition(){
