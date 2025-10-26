@@ -15,15 +15,21 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class MotorSubsystem extends SubsystemBase {
     private final TalonFX motor = new TalonFX(0); 
+    private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
     public MotorSubsystem() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
-        MotionMagicConfigs mm = configs.MotionMagic;
-        mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(5)).withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(10)).withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(15));
-
+        
+        MotionMagicConfigs mm = new MotionMagicConfigs();
+        mm.MotionMagicCruiseVelocity = 5.0;   // rotations per second
+        mm.MotionMagicAcceleration = 10.0;    // rotations per second^2
+        mm.MotionMagicJerk = 15.0;            // rotations per second^3
+        configs.MotionMagic = mm;
+        
         Slot0Configs slot0 = configs.Slot0;
         slot0.kS = 0.25;
         slot0.kV = 0.12;
@@ -31,23 +37,32 @@ public class MotorSubsystem extends SubsystemBase {
         slot0.kP = 60;
         slot0.kI = 0;
         slot0.kD = 0.5;
+        configs.Slot0 = slot0;
+
+        configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         motor.getConfigurator().apply(configs);
+        motor.setPosition(0);
     }
 
     public Command turnClockwise360() {
         return runOnce(() -> {
-            motor.setControl(new MotionMagicVoltage(Rotations.of(1)));
-        });
+            double newPosition = motor.getPosition().getValueAsDouble() + 1.0;
+            motor.setControl(motionMagicRequest.withPosition(newPosition));        });
     }
 
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
-            motor.setControl(new MotionMagicVoltage(Rotations.of(-1)));
-        });
+            double newPosition = motor.getPosition().getValueAsDouble() - 1.0;
+            motor.setControl(motionMagicRequest.withPosition(newPosition));        });
+    }
+
+    public Command stopMotor() {
+        return runOnce(() -> motor.stopMotor());
     }
 
     @Override
     public void periodic() {
+
     }
 }
