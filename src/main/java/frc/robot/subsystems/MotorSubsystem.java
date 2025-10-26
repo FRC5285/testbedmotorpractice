@@ -42,7 +42,7 @@ public class MotorSubsystem extends SubsystemBase {
     }
 
     public Command turnClockwise360() {
-        return runOnce(() -> motorPID.setGoal(1));
+        return runOnce(() -> motorPID.setGoal(5));
         //return runOnce(() -> thisMotor.set(0.3));
         /*.andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
@@ -50,7 +50,7 @@ public class MotorSubsystem extends SubsystemBase {
     }
 
     public Command turnCounterClockwise360() {
-        return runOnce(() -> motorPID.setGoal(-1));
+        return runOnce(() -> motorPID.setGoal(-5));
         //return runOnce(() -> thisMotor.set(-0.3));
         /*.andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
@@ -100,6 +100,10 @@ public class MotorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("calcAmt: ", calcAmt);
         SmartDashboard.putNumber("Motor Position: ", this.getCurrentPosition());
         if (motorOverride == false) this.thisMotor.set(calcAmt);
+        if (motorPID.atGoal()) {
+            motorOverride = true;
+            thisMotor.stopMotor();
+        }
     }
 
     public double getCurrentPosition(){
