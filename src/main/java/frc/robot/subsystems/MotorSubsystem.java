@@ -99,7 +99,8 @@ public class MotorSubsystem extends SubsystemBase {
 
     public double getCurrentPosition(){
         double position = thisMotor.getPosition().getValueAsDouble();
-        return position < 0.0 ? position + 1.0 : position;
+        //return position < 0.0 ? position + 1.0 : position;
+        return position;
       }
 }
 
