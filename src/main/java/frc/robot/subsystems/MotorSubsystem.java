@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class MotorSubsystem extends SubsystemBase {
@@ -41,14 +42,14 @@ public class MotorSubsystem extends SubsystemBase {
     }
 
     public Command turnClockwise360() {
-        return runOnce(() -> motorPID.setGoal(motorPID.getSetpoint().position + 1));
+        return runOnce(() -> motorPID.setGoal(this.getCurrentPosition() + 1));
         /*.andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
         .andThen(stopClimb()));*/
     }
 
     public Command turnCounterClockwise360() {
-        return runOnce(() -> motorPID.setGoal(motorPID.getSetpoint().position - 1));
+        return runOnce(() -> motorPID.setGoal(this.getCurrentPosition() - 1));
         /*.andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
         .andThen(stopClimb()));*/
@@ -93,7 +94,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double calcAmt = motorPID.calculate(this.getCurrentPosition());
+        double calcAmt = motorPID.calculate(this.getCurrentPosition(), motorPID.getGoal());
         if (motorOverride == false) this.thisMotor.set(calcAmt);
     }
 
