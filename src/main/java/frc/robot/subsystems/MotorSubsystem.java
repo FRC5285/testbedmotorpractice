@@ -20,23 +20,25 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 public class MotorSubsystem extends SubsystemBase {
     private final TalonFX motor = new TalonFX(0); 
     private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
+    private double targetPosition = 0;
+    private final double tolerance = 0.01; // rotations, tweak as needed
+
     public MotorSubsystem() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
-        
         MotionMagicConfigs mm = new MotionMagicConfigs();
-        mm.MotionMagicCruiseVelocity = 5.0;   // rotations per second
-        mm.MotionMagicAcceleration = 10.0;    // rotations per second^2
-        mm.MotionMagicJerk = 15.0;            // rotations per second^3
+        mm.MotionMagicCruiseVelocity = 5.0;   
+        mm.MotionMagicAcceleration = 10.0;    
+        mm.MotionMagicJerk = 15.0;            
         configs.MotionMagic = mm;
-        
+
         Slot0Configs slot0 = configs.Slot0;
-        slot0.kS = 0.25;
-        slot0.kV = 0.12;
+        slot0.kS = 0.08;
+        slot0.kV = 0.11;
         slot0.kA = 0.01;
-        slot0.kP = 60;
-        slot0.kI = 0;
-        slot0.kD = 0.5;
+        slot0.kP = 9;
+        slot0.kI = 0.3;
+        slot0.kD = 0.4;
         configs.Slot0 = slot0;
 
         configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -47,14 +49,16 @@ public class MotorSubsystem extends SubsystemBase {
 
     public Command turnClockwise360() {
         return runOnce(() -> {
-            double newPosition = motor.getPosition().getValueAsDouble() + 1.0;
-            motor.setControl(motionMagicRequest.withPosition(newPosition));        });
+            targetPosition = motor.getPosition().getValueAsDouble() + 1.0;
+            motor.setControl(motionMagicRequest.withPosition(targetPosition));
+        });
     }
 
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
-            double newPosition = motor.getPosition().getValueAsDouble() - 1.0;
-            motor.setControl(motionMagicRequest.withPosition(newPosition));        });
+            targetPosition = motor.getPosition().getValueAsDouble() - 1.0;
+            motor.setControl(motionMagicRequest.withPosition(targetPosition));
+        });
     }
 
     public Command stopMotor() {
@@ -63,6 +67,12 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        // check if motor reached the target within tolerance
+        double currentPos = motor.getPosition().getValueAsDouble();
+        if (Math.abs(targetPosition - currentPos) <= tolerance) {
+            motor.stopMotor();               // stop the motor
+            motor.setPosition(0);            // reset PID / encoder
+            targetPosition = 0;              // reset target
+        }
     }
 }
