@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,30 +26,17 @@ public class MotorSubsystem extends SubsystemBase {
 
     public MotorSubsystem() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
-
         MotionMagicConfigs mm = new MotionMagicConfigs();
-<<<<<<< HEAD
         mm.MotionMagicCruiseVelocity = 5.0;   
         mm.MotionMagicAcceleration = 10.0;    
-        mm.MotionMagicJerk = 15.0;            
-=======
-        mm.MotionMagicCruiseVelocity = 15.0;   // rotations per second
-        mm.MotionMagicAcceleration = 30.0;    // rotations per second^2
-        mm.MotionMagicJerk =   5.0;            // rotations per second^3
->>>>>>> 41033624079807ca10266c8d99d012440e933dcf
         configs.MotionMagic = mm;
 
         Slot0Configs slot0 = configs.Slot0;
         slot0.kS = 0.08;
         slot0.kV = 0.11;
         slot0.kA = 0.01;
-<<<<<<< HEAD
-        slot0.kP = 9;
-        slot0.kI = 0.3;
-=======
         slot0.kP = 12;
         slot0.kI = 0.4;
->>>>>>> 41033624079807ca10266c8d99d012440e933dcf
         slot0.kD = 0.4;
         configs.Slot0 = slot0;
 
@@ -84,6 +72,8 @@ public class MotorSubsystem extends SubsystemBase {
             motor.stopMotor();               // stop the motor
             motor.setPosition(0);            // reset PID / encoder
             targetPosition = 0;              // reset target
+
         }
-    }
+        SmartDashboard.putNumber("rotations", currentPos/2048);
+}
 }
