@@ -25,18 +25,18 @@ public class MotorSubsystem extends SubsystemBase {
 
         
         MotionMagicConfigs mm = new MotionMagicConfigs();
-        mm.MotionMagicCruiseVelocity = 5.0;   // rotations per second
-        mm.MotionMagicAcceleration = 10.0;    // rotations per second^2
-        mm.MotionMagicJerk = 15.0;            // rotations per second^3
+        mm.MotionMagicCruiseVelocity = 15.0;   // rotations per second
+        mm.MotionMagicAcceleration = 30.0;    // rotations per second^2
+        mm.MotionMagicJerk =   5.0;            // rotations per second^3
         configs.MotionMagic = mm;
         
         Slot0Configs slot0 = configs.Slot0;
-        slot0.kS = 0.25;
-        slot0.kV = 0.12;
+        slot0.kS = 0.08;
+        slot0.kV = 0.11;
         slot0.kA = 0.01;
-        slot0.kP = 60;
-        slot0.kI = 0;
-        slot0.kD = 0.5;
+        slot0.kP = 12;
+        slot0.kI = 0.4;
+        slot0.kD = 0.4;
         configs.Slot0 = slot0;
 
         configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
