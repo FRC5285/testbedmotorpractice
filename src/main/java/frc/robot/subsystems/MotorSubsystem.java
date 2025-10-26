@@ -6,6 +6,7 @@ import frc.robot.Constants.MotorConstants;
 
 import static edu.wpi.first.units.Units.Rotations;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -15,6 +16,7 @@ public class MotorSubsystem extends SubsystemBase {
     private final TalonFX thisMotor;
     private final ProfiledPIDController motorPID;
     private double goalRotations = 0;
+    private boolean motorOverride = false;
 
     public MotorSubsystem() {
         thisMotor = new TalonFX(MotorConstants.motorCanId);
@@ -24,6 +26,10 @@ public class MotorSubsystem extends SubsystemBase {
             MotorConstants.kP, MotorConstants.kI, MotorConstants.kD,
             new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA)
         );
+
+        // Final target of 360 rot, 0 rps
+        TrapezoidProfile.State m_goal = new TrapezoidProfile.State(360, 0);
+        TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
 
         motorPID.setGoal(thisMotor.getRotorPosition().getValueAsDouble());
         motorPID.enableContinuousInput(0.0, 1.0);
@@ -35,24 +41,14 @@ public class MotorSubsystem extends SubsystemBase {
     }
 
     public Command turnClockwise360() {
-        return runOnce(() -> {
-            resetMotor();
-            double current = thisMotor.getRotorPosition().getValueAsDouble();
-            goalRotations = current + 1.0; // +1 rotation so clockwise
-            motorPID.setGoal(motorPID.getSetpoint().position + 1.0);
-        });
+        return runOnce(() -> motorPID.setGoal(motorPID.getSetpoint().position + 1));
         /*.andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
         .andThen(stopClimb()));*/
     }
 
     public Command turnCounterClockwise360() {
-        return runOnce(() -> {
-            //resetMotor();
-            double current = thisMotor.getRotorPosition().getValueAsDouble();
-            goalRotations = current - 1.0; // -1 rotation (coutnerclockwise)
-            motorPID.setGoal(motorPID.getSetpoint().position - 1.0);
-        });
+        return runOnce(() -> motorPID.setGoal(motorPID.getSetpoint().position - 1));
         /*.andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
         .andThen(stopClimb()));*/
@@ -62,12 +58,24 @@ public class MotorSubsystem extends SubsystemBase {
         return runOnce(thisMotor::stopMotor);
     }
 
+    public Command stopMotor() {
+        return runOnce(() -> {
+          this.motorOverride = true;
+          thisMotor.stopMotor();
+        });
+      }
+
     public void resetMotor() {
         //thisMotor.setPosition(0);
         motorPID.reset(thisMotor.getRotorPosition().getValueAsDouble());
         //motorPID.setGoal(0);
         //goalRotations = 0;
     }
+
+    public boolean isAtSetpoint() {
+        this.motorOverride = true;
+        return motorPID.atSetpoint();
+      }
 
     // update PID
     private void updatePID() {
@@ -86,15 +94,8 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //updatePID();
-        //System.out.println(thisMotor.getRotorPosition().getValueAsDouble());
-        //System.out.println(motorPID.atGoal());
-        double calcAmt = motorPID.calculate(thisMotor.getRotorPosition().getValueAsDouble());
-        thisMotor.set(calcAmt);
-        if (motorPID.atGoal()) {
-            //stopClimb();
-            //resetMotor();
-        }
+        double calcAmt = motorPID.calculate(thisMotor.getPosition().getValueAsDouble());
+        if (motorOverride == false) this.thisMotor.set(calcAmt);
     }
 }
 
