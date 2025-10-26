@@ -42,7 +42,7 @@ public class MotorSubsystem extends SubsystemBase {
     }
 
     public Command turnClockwise360() {
-        return run(() -> motorPID.setGoal(this.getCurrentPosition() + 1));
+        return runOnce(() -> motorPID.setGoal(1));
         //return runOnce(() -> thisMotor.set(0.3));
         /*.andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
@@ -50,7 +50,7 @@ public class MotorSubsystem extends SubsystemBase {
     }
 
     public Command turnCounterClockwise360() {
-        return run(() -> motorPID.setGoal(this.getCurrentPosition() - 1));
+        return runOnce(() -> motorPID.setGoal(-1));
         //return runOnce(() -> thisMotor.set(-0.3));
         /*.andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
@@ -102,7 +102,7 @@ public class MotorSubsystem extends SubsystemBase {
     }
 
     public double getCurrentPosition(){
-        double position = thisMotor.getRotorPosition().getValueAsDouble();
+        double position = thisMotor.getPosition().getValueAsDouble();
         //return position < 0.0 ? position + 1.0 : position;
         return position;
       }
