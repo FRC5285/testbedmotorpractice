@@ -98,7 +98,7 @@ public class MotorSubsystem extends SubsystemBase {
     }
 
     public double getCurrentPosition(){
-        double position = thisMotor.getPosition().getValueAsDouble();
+        double position = thisMotor.getRotorPosition().getValueAsDouble();
         //return position < 0.0 ? position + 1.0 : position;
         return position;
       }
