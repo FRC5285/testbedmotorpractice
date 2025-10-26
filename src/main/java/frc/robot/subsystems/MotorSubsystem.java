@@ -21,7 +21,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     public MotorSubsystem() {
         thisMotor = new TalonFX(MotorConstants.motorCanId);
-        thisMotor.setPosition(0);
+        //thisMotor.setPosition(0);
 
         motorPID = new ProfiledPIDController(
             MotorConstants.kP, MotorConstants.kI, MotorConstants.kD,
@@ -42,14 +42,16 @@ public class MotorSubsystem extends SubsystemBase {
     }
 
     public Command turnClockwise360() {
-        return runOnce(() -> motorPID.setGoal(this.getCurrentPosition() + 1));
+        //return runOnce(() -> motorPID.setGoal(this.getCurrentPosition() + 1));
+        return runOnce(() -> thisMotor.set(0.3));
         /*.andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
         .andThen(stopClimb()));*/
     }
 
     public Command turnCounterClockwise360() {
-        return runOnce(() -> motorPID.setGoal(this.getCurrentPosition() - 1));
+        //return runOnce(() -> motorPID.setGoal(this.getCurrentPosition() - 1));
+        return runOnce(() -> thisMotor.set(-0.3));
         /*.andThen(run(this::updatePID)
         .until(() -> motorPID.atGoal())
         .andThen(stopClimb()));*/
@@ -95,7 +97,7 @@ public class MotorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         double calcAmt = motorPID.calculate(this.getCurrentPosition(), motorPID.getGoal());
-        if (motorOverride == false) this.thisMotor.set(calcAmt);
+        //if (motorOverride == false) this.thisMotor.set(calcAmt);
     }
 
     public double getCurrentPosition(){
