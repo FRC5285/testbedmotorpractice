@@ -22,9 +22,10 @@ public class MotorSubsystem extends SubsystemBase {
     private double goalRotations = 0;
     private boolean motorOverride = false;
 
-    private double control = this.getCurrentPosition();
-
+    private double control;
     public MotorSubsystem() {
+        control = this.getCurrentPosition();
+
         thisMotor = new TalonFX(MotorConstants.motorCanId);
         //thisMotor.setPosition(0);
 
