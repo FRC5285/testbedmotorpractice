@@ -22,6 +22,8 @@ public class MotorSubsystem extends SubsystemBase {
     private double goalRotations = 0;
     private boolean motorOverride = false;
 
+    private int control = 0; // 0
+
     public MotorSubsystem() {
         thisMotor = new TalonFX(MotorConstants.motorCanId);
         //thisMotor.setPosition(0);
@@ -57,11 +59,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     public Command turnClockwise360() {
         return runOnce(() -> {
-            // create a position closed-loop request, voltage output, slot 0 configs
-            final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
-
-            // set position to 10 rotations
-            thisMotor.setControl(m_request.withPosition(this.getCurrentPosition() + 1));
+            control = 1;
         });
         //return runOnce(() -> thisMotor.set(0.3));
         /*.andThen(run(this::updatePID)
@@ -71,11 +69,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
-            // create a position closed-loop request, voltage output, slot 0 configs
-            final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
-
-            // set position to 10 rotations
-            thisMotor.setControl(m_request.withPosition(this.getCurrentPosition() -1));
+            control = -1;
         });
         //return runOnce(() -> thisMotor.set(-0.3));
         /*.andThen(run(this::updatePID)
@@ -122,11 +116,16 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // double calcAmt = motorPID.calculate(this.getCurrentPosition(), motorPID.getGoal());
+        if (control == 1) {
+            motorPID.setGoal(this.getCurrentPosition() + 1);
+        } else if (control == -1) {
+            motorPID.setGoal(this.getCurrentPosition() - 1);
+        }
+        double calcAmt = motorPID.calculate(this.getCurrentPosition(), motorPID.getGoal());
         // SmartDashboard.putNumber("calcAmt: ", calcAmt);
         // SmartDashboard.putNumber("Motor Position: ", this.getCurrentPosition());
         // SmartDashboard.putBoolean("atGoal", motorPID.atGoal());
-        // if (motorOverride == false) this.thisMotor.set(calcAmt);
+        if (motorOverride == false) this.thisMotor.set(calcAmt);
         // if (motorPID.atGoal()) {
         //     motorOverride = true;
         //     thisMotor.stopMotor();
