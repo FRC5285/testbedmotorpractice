@@ -54,19 +54,18 @@ public class MotorSubsystem extends SubsystemBase {
                 return; // don't do anything if goal not reached
             }
 
-            targetPosition = motor.getPosition().getValueAsDouble() + 1.0;
+            targetPosition += 1;
             motor.setControl(motionMagicRequest.withPosition(targetPosition));
         });
     }
-
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
             double currentPos = motor.getPosition().getValueAsDouble();
             if (Math.abs(targetPosition - currentPos) > tolerance) {
                 return; // don't do anything if goal not reached
             }
-            
-            targetPosition = motor.getPosition().getValueAsDouble() - 1.0;
+
+            targetPosition -= 1;
             motor.setControl(motionMagicRequest.withPosition(targetPosition));
         });
     }
