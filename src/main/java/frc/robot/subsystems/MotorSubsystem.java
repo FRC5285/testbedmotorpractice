@@ -117,11 +117,11 @@ public class MotorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         motorPID.setGoal(control);
-        double calcAmt = motorPID.calculate(this.getCurrentPosition(), motorPID.getGoal());
+        double calcAmt = motorPID.calculate(this.getCurrentPosition(), motorPID.getSetpoint());
         // SmartDashboard.putNumber("calcAmt: ", calcAmt);
         // SmartDashboard.putNumber("Motor Position: ", this.getCurrentPosition());
         // SmartDashboard.putBoolean("atGoal", motorPID.atGoal());
-        if (motorOverride == false) this.thisMotor.set(calcAmt);
+        if (motorOverride == false) this.thisMotor.setVoltage(calcAmt);
         // if (motorPID.atGoal()) {
         //     motorOverride = true;
         //     thisMotor.stopMotor();
