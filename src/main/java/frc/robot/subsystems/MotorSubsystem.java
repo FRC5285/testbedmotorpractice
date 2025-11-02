@@ -50,13 +50,12 @@ public class MotorSubsystem extends SubsystemBase {
     public Command turnClockwise360() {
         return runOnce(() -> {
             targetPosition += 1;
-            motor.setControl(motionMagicRequest.withPosition(targetPosition));
+
         });
     }
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
             targetPosition -= 1;
-            motor.setControl(motionMagicRequest.withPosition(targetPosition));
         });
     }
 
@@ -66,6 +65,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        motor.setControl(motionMagicRequest.withPosition(targetPosition));
         // check if motor reached the target within tolerance
         double currentPos = motor.getPosition().getValueAsDouble();
         SmartDashboard.putNumber("rotations", currentPos);
