@@ -22,7 +22,7 @@ public class MotorSubsystem extends SubsystemBase {
     private double goalRotations = 0;
     private boolean motorOverride = false;
 
-    private int control = 0; // 0
+    private double control = 0;
 
     public MotorSubsystem() {
         thisMotor = new TalonFX(MotorConstants.motorCanId);
@@ -59,7 +59,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     public Command turnClockwise360() {
         return runOnce(() -> {
-            control = 1;
+            control = this.getCurrentPosition() + 1;
         });
         //return runOnce(() -> thisMotor.set(0.3));
         /*.andThen(run(this::updatePID)
@@ -69,7 +69,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
-            control = -1;
+            control = this.getCurrentPosition() - 1;
         });
         //return runOnce(() -> thisMotor.set(-0.3));
         /*.andThen(run(this::updatePID)
@@ -116,11 +116,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (control == 1) {
-            motorPID.setGoal(this.getCurrentPosition() + 1);
-        } else if (control == -1) {
-            motorPID.setGoal(this.getCurrentPosition() - 1);
-        }
+        motorPID.setGoal(control);
         double calcAmt = motorPID.calculate(this.getCurrentPosition(), motorPID.getGoal());
         // SmartDashboard.putNumber("calcAmt: ", calcAmt);
         // SmartDashboard.putNumber("Motor Position: ", this.getCurrentPosition());
