@@ -40,4 +40,9 @@ public class RobotContainer {
         // When "x" is pressed on the controller, turn the motor counterclockwise 360 degrees.
         m_driverController.x().onTrue(theMotor.turnCounterClockwise360());
     }
+
+    // Reset PIDs when robot is disabled and then enabled
+    public void resetPIDs() {
+        this.theMotor.resetPID();
+    }
 }
