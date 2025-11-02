@@ -27,9 +27,9 @@ public class MotorSubsystem extends SubsystemBase {
     public MotorSubsystem() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
         MotionMagicConfigs mm = new MotionMagicConfigs();
-        mm.MotionMagicCruiseVelocity = 30.0;   
-        mm.MotionMagicAcceleration = 25.0;    
-        mm.MotionMagicJerk = 50.0;
+        mm.MotionMagicCruiseVelocity = 25.0;   
+        mm.MotionMagicAcceleration = 35.0;    
+        mm.MotionMagicJerk = 20.0;
         configs.MotionMagic = mm;
 
         Slot0Configs slot0 =configs.Slot0;
@@ -49,22 +49,12 @@ public class MotorSubsystem extends SubsystemBase {
 
     public Command turnClockwise360() {
         return runOnce(() -> {
-            double currentPos = motor.getPosition().getValueAsDouble();
-            if (Math.abs(targetPosition - currentPos) > tolerance) {
-                return; // don't do anything if goal not reached
-            }
-
             targetPosition += 1;
             motor.setControl(motionMagicRequest.withPosition(targetPosition));
         });
     }
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
-            double currentPos = motor.getPosition().getValueAsDouble();
-            if (Math.abs(targetPosition - currentPos) > tolerance) {
-                return; // don't do anything if goal not reached
-            }
-
             targetPosition -= 1;
             motor.setControl(motionMagicRequest.withPosition(targetPosition));
         });
@@ -78,14 +68,7 @@ public class MotorSubsystem extends SubsystemBase {
     public void periodic() {
         // check if motor reached the target within tolerance
         double currentPos = motor.getPosition().getValueAsDouble();
-        if (Math.abs(targetPosition - currentPos) <= tolerance) {
-            motor.stopMotor();               // stop the motor
-            motor.setPosition(0);            // reset PID / encoder
-            targetPosition = 0;              // reset target
-
-        }
         SmartDashboard.putNumber("rotations", currentPos);
-
         
         }
 }
