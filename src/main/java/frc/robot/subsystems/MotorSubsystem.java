@@ -23,6 +23,7 @@ public class MotorSubsystem extends SubsystemBase {
     private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
     private double targetPosition = 0;
     private final double tolerance = 0.01; // rotations, tweak as needed
+    private double pendingTurns = 0;
 
     public MotorSubsystem() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -36,26 +37,25 @@ public class MotorSubsystem extends SubsystemBase {
         slot0.kS = 0.08;
         slot0.kV = 0.11;
         slot0.kA = 0.01;
-        slot0.kP = 8;
-        slot0.kI = 0.1;
+        slot0.kP = 0.7;
+        slot0.kI = 0.0;
         slot0.kD = 0.4;
         configs.Slot0 = slot0;
 
         configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         motor.getConfigurator().apply(configs);
-        motor.setPosition(0);
-    }
+        }
 
     public Command turnClockwise360() {
         return runOnce(() -> {
-            targetPosition += 1;
+            pendingTurns++;
 
         });
     }
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
-            targetPosition -= 1;
+            pendingTurns--;
         });
     }
 
@@ -65,9 +65,20 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        double currentPos = motor.getPosition().getValueAsDouble();
+
+        if (Math.abs(currentPos - targetPosition) < tolerance) {
+            if (pendingTurns > 0) {
+                pendingTurns--;
+                targetPosition += 1.0;
+            } else if (pendingTurns < 0) {
+                pendingTurns++;
+                targetPosition -= 1.0;
+            }
+        }
+
         motor.setControl(motionMagicRequest.withPosition(targetPosition));
         // check if motor reached the target within tolerance
-        double currentPos = motor.getPosition().getValueAsDouble();
         SmartDashboard.putNumber("rotations", currentPos);
         SmartDashboard.putNumber("traget", targetPosition);
         }
