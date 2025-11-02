@@ -1,35 +1,39 @@
-package frc.robot;
+package frc.robot; // This file is in the main robot package
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
+ * The Constants class holds robot-wide constant values.
+ * All constants should be declared as public static final
+ * so they can be accessed anywhere without creating objects.
  */
 public final class Constants {
-    public static class OperatorConstants {
-        public static final int kDriverControllerPort = 0;
-    }
 
-    public static class MotorConstants {
-        // Constants for the motor go here
+    // =========================== MOTOR CONSTANTS ===========================
+    public static final class MotorConstants {
 
-        /** The CAN ID for the motor */
-        public static final int motorCanId = 0;
+        // CAN ID for the Kraken X44 motor controller
+        // (Change this to match the actual CAN ID of your testbed motor)
+        public static final int motorCanId = 1;
 
-        /** P value for motor*/
-        public static final double kP = 0.5;
-        /** I value for motor*/
-        public static final double kI = 0.0;
-        /** D value for motor*/
-        public static final double kD = 0.0;
+        // PID controller tuning constants — start with these and tune as needed
+        // kP: how strongly the motor reacts to position error
+        // kI: fixes small steady-state errors (usually 0 unless needed)
+        // kD: dampens oscillation (helps avoid overshoot)
+        public static final double kP = 4.0;    // Proportional gain — adjust for your motor
+        public static final double kI = 0.0;    // Integral gain — usually 0 for position control
+        public static final double kD = 0.1;    // Derivative gain — helps smooth motion
 
-        /** Max acceleration of motor, in rotations/second/second */
-        public static final double maxAccel = 0.5;
+        // Maximum velocity (rotations per second) the PID can command
+        // This affects how quickly it moves toward its goal
+        public static final double maxVelocity = 20.0; // Try 10–30 depending on your setup
 
-        /** Max velocity of motor, in rotations/second */
-        public static final double maxVelocity = 1.0;
+        // Maximum acceleration (rotations per second squared)
+        // Higher = snappier motion, lower = smoother motion
+        public static final double maxAccel = 40.0;
+
+        // Conversion constants (optional, for clarity)
+        // One rotation = 360 degrees
+        public static final double rotationsPerRevolution = 1.0; // The encoder is already in rotations
+        public static final double degreesPerRotation = 360.0;   // 1 rotation = 360 degrees
     }
 }
+

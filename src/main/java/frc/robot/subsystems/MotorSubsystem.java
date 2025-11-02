@@ -1,40 +1,57 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems; // Puts this file in the 'subsystems' package (part of the robot code structure)
 
-// Imported libraries and files
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+// =========================== IMPORTS ===========================
+// Import classes used for motor control, PID, telemetry, and commands
+import edu.wpi.first.math.controller.ProfiledPIDController; // PID controller with velocity/acceleration limits
+import edu.wpi.first.math.trajectory.TrapezoidProfile; // Defines motion profile constraints
+import edu.wpi.first.util.sendable.SendableBuilder; // Used to display custom values on SmartDashboard
+import edu.wpi.first.util.sendable.SendableRegistry; // Registers subsystems or sendables for telemetry
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; // Displays live data on the SmartDashboard
+import edu.wpi.first.wpilibj2.command.Command; // Base class for command objects
+import edu.wpi.first.wpilibj2.command.SubsystemBase; // Base class for all subsystems in command-based programming
 
-import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.hardware.TalonFX; // Class for controlling a Kraken X44 (TalonFX) motor via CAN bus
 
-import frc.robot.Constants.MotorConstants; // Constants for the motor, refer with MotorConstants.[variable name]
+import frc.robot.Constants.MotorConstants; // Imports constants specific to the motor setup
 
+// =========================== CLASS DEFINITION ===========================
+public class MotorSubsystem extends SubsystemBase { // Defines the subsystem that controls the motor
 
-public class MotorSubsystem extends SubsystemBase {
-    // Class variables (ints, doubles, motor objects) go here
-    private TalonFX motor; // motor object
-    private double goalRotations; // number of rotations to go to
-    private ProfiledPIDController thePID; // motor PID
+    // Declare class variables (available to all methods in this class)
+    private TalonFX motor;              // Motor controller object for the Kraken X44
+    private double goalRotations;       // The target number of rotations the motor should move to
+    private ProfiledPIDController thePID; // PID controller object for precise position control
 
     /** Creates a new MotorSubsystem. */
-    public MotorSubsystem() {
-        // defines variables
-        this.motor = new TalonFX(MotorConstants.motorCanId);
-        this.goalRotations = 0.0;
-        this.thePID = new ProfiledPIDController(MotorConstants.kP, MotorConstants.kI, MotorConstants.kD, new TrapezoidProfile.Constraints(MotorConstants.maxAccel, MotorConstants.maxVelocity));
+    public MotorSubsystem() { // Constructor runs once when the subsystem is created
 
-        // Sets motor position and goal to 0
-        this.motor.setPosition(0.0);
-        this.thePID.setGoal(this.goalRotations);
+        // =========================== MOTOR INITIALIZATION ===========================
+        this.motor = new TalonFX(MotorConstants.motorCanId); // Creates motor object using its CAN ID from Constants.java
 
-        // Telemetry
-        SendableRegistry.add(this, "Motor");
-        SmartDashboard.putData(this);
+        // =========================== INITIAL GOAL SETUP ===========================
+        this.goalRotations = 0.0; // Start with the motor goal position at 0 rotations
+
+        // =========================== PID CONTROLLER SETUP ===========================
+        this.thePID = new ProfiledPIDController(
+            MotorConstants.kP, // Proportional term (how strongly the motor reacts to error)
+            MotorConstants.kI, // Integral term (corrects accumulated error over time)
+            MotorConstants.kD, // Derivative term (slows down overshoot by considering rate of change)
+            new TrapezoidProfile.Constraints(
+                MotorConstants.maxAccel, // Maximum acceleration allowed
+                MotorConstants.maxVelocity // Maximum velocity allowed
+            )
+        );
+
+        // =========================== INITIAL RESET ===========================
+        this.motor.setPosition(0.0); // Reset the motor’s internal position sensor to 0 rotations
+        this.thePID.setGoal(this.goalRotations); // Tell the PID that our first goal is 0 rotations (stay still)
+
+        // =========================== TELEMETRY SETUP ===========================
+        SendableRegistry.add(this, "Motor"); // Registers this subsystem with the dashboard system under the name "Motor"
+        SmartDashboard.putData(this); // Adds this subsystem’s telemetry to the SmartDashboard
     }
+
+    // =========================== COMMANDS ===========================
 
     /**
      * Creates a command that turns the motor shaft 360 degrees clockwise.
@@ -42,11 +59,10 @@ public class MotorSubsystem extends SubsystemBase {
      * @return a command that turns the motor shaft 360 degrees clockwise.
      */
     public Command turnClockwise360() {
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
+        // Creates a one-time command that runs only once when the button is pressed
         return runOnce(() -> {
-            this.goalRotations -= 1.0;
-            this.thePID.setGoal(this.goalRotations); // sets pid goal
+            this.goalRotations -= 1.0; // Decrease goal by 1 rotation (clockwise = negative direction)
+            this.thePID.setGoal(this.goalRotations); // Update the PID controller’s goal to the new target
         });
     }
 
@@ -56,37 +72,51 @@ public class MotorSubsystem extends SubsystemBase {
      * @return a command that turns the motor shaft 360 degrees counterclockwise.
      */
     public Command turnCounterClockwise360() {
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
+        // Creates a one-time command that runs only once when the button is pressed
         return runOnce(() -> {
-            this.goalRotations += 1.0;
-            this.thePID.setGoal(this.goalRotations); // sets pid goal
+            this.goalRotations += 1.0; // Increase goal by 1 rotation (counterclockwise = positive direction)
+            this.thePID.setGoal(this.goalRotations); // Update the PID controller’s goal to the new target
         });
     }
 
-    // Call this method in Robot.java when the robot re-enables, only needed when the "I" term in the PID is not 0
+    // =========================== PID RESET ===========================
+    // Optional helper to reset the PID loop to current position when re-enabling robot
     public void resetPID() {
-        double motorPosition = this.motor.getPosition().getValueAsDouble(); // gets motor position
-        this.thePID.reset(motorPosition); // resets PID
+        double motorPosition = this.motor.getPosition().getValueAsDouble(); // Get the current motor position in rotations
+        this.thePID.reset(motorPosition); // Reset the PID internal state to that position
     }
 
-    @Override // Rewrites (adds content to) a method from SubsystemBase
-    public void periodic() { // This method will be called once per scheduler run (50 times per second)
-        double motorPosition = this.motor.getPosition().getValueAsDouble(); // gets motor position
-        double newMotorSpeed = this.thePID.calculate(motorPosition); // motor speed calculation from PID
-        this.motor.set(newMotorSpeed); // sets the motor speed
+    // =========================== PERIODIC CONTROL LOOP ===========================
+    @Override
+    public void periodic() { // Called automatically ~50 times per second while robot code runs
 
-        // the above as one line:
+        // Read the current position from the motor’s internal encoder
+        double motorPosition = this.motor.getPosition().getValueAsDouble();
+
+        // Use the PID controller to calculate how fast the motor should move to reach the goal
+        double newMotorSpeed = this.thePID.calculate(motorPosition);
+
+        // Send the calculated output (speed) to the motor controller
+        this.motor.set(newMotorSpeed);
+
+        // Equivalent single-line version of the above three lines:
         // this.motor.set(this.thePID.calculate(this.motor.getPosition().getValueAsDouble()));
     }
 
-    // Telemetry
+    // =========================== TELEMETRY / DASHBOARD DATA ===========================
     @Override
     public void initSendable(SendableBuilder builder){
-        // goal rotations
+        // Add a live display value for the goal rotations (the target position)
         builder.addDoubleProperty("Goal Rotations", () -> this.goalRotations, null);
 
-        // actual rotations
+        // Add a live display value for the actual motor position (from encoder)
         builder.addDoubleProperty("Motor Rotations", () -> this.motor.getPosition().getValueAsDouble(), null);
     }
 }
+
+
+
+
+
+
+
