@@ -77,10 +77,6 @@ public class MotorSubsystem extends SubsystemBase {
         .andThen(stopClimb()));*/
     }
 
-    public Command stopClimb() {
-        return runOnce(thisMotor::stopMotor);
-    }
-
     public Command stopMotor() {
         return runOnce(() -> {
           this.motorOverride = true;
@@ -99,25 +95,10 @@ public class MotorSubsystem extends SubsystemBase {
         return motorPID.atSetpoint();
       }
 
-    // update PID
-    private void updatePID() {
-        double currentPosition = thisMotor.getPosition().getValueAsDouble();
-        double output = this.motorPID.calculate(currentPosition, goalRotations);
-
-        double calcAmt = motorPID.calculate(currentPosition);
-
-        output = Math.max(0.0 , Math.min(1.0, output));
-        thisMotor.set(calcAmt);
-
-        // SmartDashboard.putNumber("output", output);
-        // SmartDashboard.putNumber("currentPosition", currentPosition);
-        // SmartDashboard.putNumber("goalRotations", goalRotations);
-    }
-
     @Override
     public void periodic() {
         motorPID.setGoal(control);
-        double calcAmt = motorPID.calculate(this.getCurrentPosition(), motorPID.getSetpoint());
+        double calcAmt = motorPID.calculate(this.getCurrentPosition());
         // SmartDashboard.putNumber("calcAmt: ", calcAmt);
         // SmartDashboard.putNumber("Motor Position: ", this.getCurrentPosition());
         // SmartDashboard.putBoolean("atGoal", motorPID.atGoal());
