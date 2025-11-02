@@ -43,7 +43,7 @@ public class MotorSubsystem extends SubsystemBase {
         configs.Slot0 = slot0;
 
         configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-
+        motor.setPosition(0);
         motor.getConfigurator().apply(configs);
         }
 
@@ -67,7 +67,6 @@ public class MotorSubsystem extends SubsystemBase {
     public void periodic() {
         double currentPos = motor.getPosition().getValueAsDouble();
 
-        if (Math.abs(currentPos - targetPosition) < tolerance) {
             if (pendingTurns > 0) {
                 pendingTurns--;
                 targetPosition += 1.0;
@@ -75,9 +74,13 @@ public class MotorSubsystem extends SubsystemBase {
                 pendingTurns++;
                 targetPosition -= 1.0;
             }
-        }
+        
 
         motor.setControl(motionMagicRequest.withPosition(targetPosition));
+
+        if ((Math.abs(currentPos - targetPosition)) < tolerance) {
+            stopMotor();
+        }
         // check if motor reached the target within tolerance
         SmartDashboard.putNumber("rotations", currentPos);
         SmartDashboard.putNumber("traget", targetPosition);
