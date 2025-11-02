@@ -27,16 +27,16 @@ public class MotorSubsystem extends SubsystemBase {
     public MotorSubsystem() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
         MotionMagicConfigs mm = new MotionMagicConfigs();
-        mm.MotionMagicCruiseVelocity = 25.0;   
-        mm.MotionMagicAcceleration = 35.0;    
-        mm.MotionMagicJerk = 20.0;
+        mm.MotionMagicCruiseVelocity = 15.0;   
+        mm.MotionMagicAcceleration = 25.0;    
+        mm.MotionMagicJerk = 10.0;
         configs.MotionMagic = mm;
 
         Slot0Configs slot0 =configs.Slot0;
         slot0.kS = 0.08;
         slot0.kV = 0.11;
         slot0.kA = 0.01;
-        slot0.kP = 12;
+        slot0.kP = 8;
         slot0.kI = 0.1;
         slot0.kD = 0.4;
         configs.Slot0 = slot0;
@@ -69,6 +69,6 @@ public class MotorSubsystem extends SubsystemBase {
         // check if motor reached the target within tolerance
         double currentPos = motor.getPosition().getValueAsDouble();
         SmartDashboard.putNumber("rotations", currentPos);
-        
+        SmartDashboard.putNumber("traget", targetPosition);
         }
 }
