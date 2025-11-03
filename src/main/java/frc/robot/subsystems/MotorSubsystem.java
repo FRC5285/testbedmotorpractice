@@ -24,8 +24,6 @@ public class MotorSubsystem extends SubsystemBase {
 
     private double control;
     public MotorSubsystem() {
-        control = this.getCurrentPosition();
-
         thisMotor = new TalonFX(MotorConstants.motorCanId);
         //thisMotor.setPosition(0);
 
@@ -56,6 +54,8 @@ public class MotorSubsystem extends SubsystemBase {
         resetMotor();
 
         SmartDashboard.putData("motor PID", motorPID);
+
+        control = this.getCurrentPosition();
     }
 
     public Command turnClockwise360() {
