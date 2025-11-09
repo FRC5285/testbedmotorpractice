@@ -76,7 +76,7 @@ public class MotorSubsystem extends SubsystemBase {
         return runOnce(() -> {
             control -= 1;
 
-            this.thisMotor.setPosition(control);
+            //this.thisMotor.setPosition(control);
             this.motorPID.setGoal(control);
             
         });
@@ -106,12 +106,12 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        motorPID.setGoal(control);
+        //motorPID.setGoal(control);
         double calcAmt = motorPID.calculate(this.getCurrentPosition(), motorPID.getGoal());
         // SmartDashboard.putNumber("calcAmt: ", calcAmt);
         // SmartDashboard.putNumber("Motor Position: ", this.getCurrentPosition());
         // SmartDashboard.putBoolean("atGoal", motorPID.atGoal());
-        //this.thisMotor.setPosition(calcAmt);
+        this.thisMotor.setPosition(calcAmt);
         this.thisMotor.set(calcAmt);
         // if (motorPID.atGoal()) {
         //     motorOverride = true;
