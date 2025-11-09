@@ -55,12 +55,12 @@ public class MotorSubsystem extends SubsystemBase {
 
         SmartDashboard.putData("motor PID", motorPID);
 
-        control = this.getCurrentPosition();
+        control = 0;
     }
 
     public Command turnClockwise360() {
         return runOnce(() -> {
-            control -=1;
+            control  += 1;
 
             this.thisMotor.setPosition(control);
             this.motorPID.setGoal(control);
@@ -74,7 +74,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
-            control -=1;
+            control -= 1;
 
             this.thisMotor.setPosition(control);
             this.motorPID.setGoal(control);
