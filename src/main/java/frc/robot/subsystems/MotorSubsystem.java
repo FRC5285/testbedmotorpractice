@@ -1,5 +1,12 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // Imported libraries and files
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -7,6 +14,9 @@ import frc.robot.Constants.MotorConstants; // Constants for the motor, refer wit
 
 public class MotorSubsystem extends SubsystemBase {
     // Class variables (ints, doubles, motor objects) go here
+    private TalonFX motor;
+    private double goalRotations;
+    private ProfiledPIDController thePID;
 
 
     /** Creates a new MotorSubsystem. */
