@@ -8,9 +8,18 @@ import frc.robot.Constants.MotorConstants; // Constants for the motor, refer wit
 public class MotorSubsystem extends SubsystemBase {
     // Class variables (ints, doubles, motor objects) go here
 
+
     /** Creates a new MotorSubsystem. */
     public MotorSubsystem() {
+        this.motor = new TalonFX(MotorConstants.motorCanId);
+        this.goalRotations = 0.0;
+        this.thePID = new ProfiledPIDController(MotorConstants.kP, MotorConstants.kI, MotorConstants.kD, new TrapezoidProfile.Constraints(MotorConstants.maxAccel, MotorConstants.maxVelocity));
+        
+        this.motor.setPosition(0,0);
+        this.thePID.setGoal(this.goalRotations);
 
+        SendableRegistry.add(this, "Motor");
+        SmartDashboard.putData(this);
     }
 
     /**
@@ -22,6 +31,8 @@ public class MotorSubsystem extends SubsystemBase {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
         return runOnce(() -> {
+            this.goalRotations -= 1.0;
+            this.thePID.setGoal(this.goalRotations);
             /* one-time action goes here */
         });
         // return run(() -> {
@@ -39,14 +50,30 @@ public class MotorSubsystem extends SubsystemBase {
         // Subsystem::RunOnce implicitly requires `this` subsystem.
         return runOnce(() -> {
             /* one-time action goes here */
+            this.goalRotations += 1.0;
+            this.thePID.setGoal(this.goalRotations);
         });
         // return run(() -> {
         //
         // }); // run() returns a command that repeats 50x per second until canceled or interrupted
     }
 
+    public void resetPID() {
+        double motorPosition = this.motor.getPosition().getValueAsDouble();
+        this.thePID.reset(motorPosition);
+    }
+
     @Override // Rewrites (adds content to) a method from SubsystemBase
     public void periodic() {
         // This method will be called once per scheduler run (50 times per second)
+        double motorPosition = this.motor.getPosition().getValueAsDouble();
+        double newMotorSpeed = this.thePID.calculate(motorPosition);
+        this.motor.set(newMotorSpeed);
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.addDoubleProperty("Goal Rotations", () -> this.goalRotations, null);
+        builder.addDoubleProperty("Motor Rotations", () -> this.motor.getPosition().getValueAsDouble(), null);
     }
 }
