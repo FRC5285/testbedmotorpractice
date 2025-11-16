@@ -32,16 +32,16 @@ public class MotorSubsystem extends SubsystemBase {
             new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA)
         );
 
-        // bsic profiling and pid
-        // in init function, set slot 0 gains
-        var slot0Configs = new Slot0Configs();
-        slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
-        slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
-        slot0Configs.kP = 2.4; // An error of 1 rotation results in 2.4 V output
-        slot0Configs.kI = 0; // no output for integrated error
-        slot0Configs.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
+        // // bsic profiling and pid
+        // // in init function, set slot 0 gains
+        // var slot0Configs = new Slot0Configs();
+        // slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
+        // slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
+        // slot0Configs.kP = 2.4; // An error of 1 rotation results in 2.4 V output
+        // slot0Configs.kI = 0; // no output for integrated error
+        // slot0Configs.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
 
-        thisMotor.getConfigurator().apply(slot0Configs);
+        // thisMotor.getConfigurator().apply(slot0Configs);
 
         // Final target of 360 rot, 0 rps
         //TrapezoidProfile.State m_goal = new TrapezoidProfile.State(360, 0);
@@ -60,16 +60,12 @@ public class MotorSubsystem extends SubsystemBase {
 
     public Command turnClockwise360() {
         return runOnce(() -> {
-            control  += 1;
+            control += 1;
 
-            this.thisMotor.setPosition(control);
+            //this.thisMotor.setPosition(control);
             this.motorPID.setGoal(control);
             
         });
-        //return runOnce(() -> thisMotor.set(0.3));
-        /*.andThen(run(this::updatePID)
-        .until(() -> motorPID.atGoal())
-        .andThen(stopClimb()));*/
     }
 
     public Command turnCounterClockwise360() {
@@ -80,10 +76,6 @@ public class MotorSubsystem extends SubsystemBase {
             this.motorPID.setGoal(control);
             
         });
-        //return runOnce(() -> thisMotor.set(-0.3));
-        /*.andThen(run(this::updatePID)
-        .until(() -> motorPID.atGoal())
-        .andThen(stopClimb()));*/
     }
 
     public Command stopMotor() {
@@ -106,7 +98,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //motorPID.setGoal(control);
+        motorPID.setGoal(control);
         double calcAmt = motorPID.calculate(this.getCurrentPosition(), control);
         // SmartDashboard.putNumber("calcAmt: ", calcAmt);
         // SmartDashboard.putNumber("Motor Position: ", this.getCurrentPosition());
