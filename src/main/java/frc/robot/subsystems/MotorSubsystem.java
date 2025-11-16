@@ -34,26 +34,6 @@ public class MotorSubsystem extends SubsystemBase {
             new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA)
         );
 
-        // // bsic profiling and pid
-        // // in init function, set slot 0 gains
-        // var slot0Configs = new Slot0Configs();
-        // slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
-        // slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
-        // slot0Configs.kP = 2.4; // An error of 1 rotation results in 2.4 V output
-        // slot0Configs.kI = 0; // no output for integrated error
-        // slot0Configs.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
-
-        // thisMotor.getConfigurator().apply(slot0Configs);
-
-        // Final target of 360 rot, 0 rps
-        //TrapezoidProfile.State m_goal = new TrapezoidProfile.State(360, 0);
-        //TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
-
-        //motorPID.setGoal(thisMotor.getRotorPosition().getValueAsDouble());
-        //motorPID.enableContinuousInput(0.0, 1.0);
-        //motorPID.setTolerance(0.01);
-
-        //resetMotor();
         thisMotor.setPosition(0);
 
         motorPID.setTolerance(0.1);
@@ -67,8 +47,6 @@ public class MotorSubsystem extends SubsystemBase {
     public Command turnClockwise360() {
         return runOnce(() -> {
             this.control += 1;
-
-            //this.thisMotor.setPosition(control);
             this.motorPID.setGoal(control);
         });
     }
@@ -76,8 +54,6 @@ public class MotorSubsystem extends SubsystemBase {
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
             this.control -= 1;
-
-            //this.thisMotor.setPosition(control);
             this.motorPID.setGoal(control);
         });
     }
@@ -89,30 +65,11 @@ public class MotorSubsystem extends SubsystemBase {
         });
       }
 
-    public void resetMotor() {
-        //thisMotor.setPosition(0);
-        motorPID.reset(this.getCurrentPosition());
-        //motorPID.setGoal(0);
-        //goalRotations = 0;
-    }
-
-    public boolean isAtSetpoint() {
-        return motorPID.atSetpoint();
-      }
-
     @Override
     public void periodic() {
         motorPID.setGoal(control);
         double calcAmt = motorPID.calculate(this.getCurrentPosition());
-        // SmartDashboard.putNumber("calcAmt: ", calcAmt);
-        // SmartDashboard.putNumber("Motor Position: ", this.getCurrentPosition());
-        // SmartDashboard.putBoolean("atGoal", motorPID.atGoal());
-        //this.thisMotor.setPosition(calcAmt);
         this.thisMotor.set(calcAmt);
-        // if (motorPID.atGoal()) {
-        //     motorOverride = true;
-        //     thisMotor.stopMotor();
-        // }
     }
 
     // Telemetry
