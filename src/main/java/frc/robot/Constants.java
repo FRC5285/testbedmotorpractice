@@ -22,7 +22,7 @@ public final class Constants {
         // kP: how strongly the motor reacts to position error
         // kI: fixes small steady-state errors (usually 0 unless needed)
         // kD: dampens oscillation (helps avoid overshoot)
-        public static final double kP =  0.5;  // Proportional gain — adjust for your motor
+        public static final double kP =  0.6;  // Proportional gain — adjust for your motor
         public static final double kI = 0.0;    // Integral gain — usually 0 for position control
         public static final double kD = 0.0;    // Derivative gain — helps smooth motion
 
@@ -34,10 +34,8 @@ public final class Constants {
         // Higher = snappier motion, lower = smoother motion
         public static final double maxAccel = 1;
 
-        // Conversion constants (optional, for clarity)
-        // One rotation = 360 degrees
-        public static final double rotationsPerRevolution = 1.0 ; // The encoder is already in rotations
-        public static final double degreesPerRotation = 360.0;   // 1 rotation = 360 degrees
+        
+        
     }
 }
 

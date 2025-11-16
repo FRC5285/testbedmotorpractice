@@ -43,7 +43,7 @@ public class MotorSubsystem extends SubsystemBase { // Defines the subsystem tha
         );
 
         // =========================== INITIAL RESET ===========================
-        // this.motor.setPosition(0.0); // Reset the motor’s internal position sensor to 0 rotations
+        this.motor.setPosition(0.0); // Reset the motor’s internal position sensor to 0 rotations
         this.thePID.setGoal(this.goalRotations); // Tell the PID that our first goal is 0 rotations (stay still)
 
         // =========================== TELEMETRY SETUP ===========================
