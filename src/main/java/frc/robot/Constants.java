@@ -21,12 +21,12 @@ public final class Constants {
         public static final int encoderA = 1;
         public static final int encoderB = 2;
 
-        public static final double kP = 0.7;
+        public static final double kP = 0.4;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
 
-        public static final double maxV = 1.5;
-        public static final double maxA = 0.5;
+        public static final double maxV = 2.0;
+        public static final double maxA = 1.0;
 
         public static final double speed = 0.70;
         public static final double rotations = 360.0;
