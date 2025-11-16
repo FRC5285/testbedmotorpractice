@@ -7,6 +7,10 @@ package frc.robot; // This file is in the main robot package
  */
 public final class Constants {
 
+    public static final class OperatorConstants {
+        public static final int kDriverControllerPort = 0;
+    }
+
     // =========================== MOTOR CONSTANTS ===========================
     public static final class MotorConstants {
 
