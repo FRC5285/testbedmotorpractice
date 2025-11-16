@@ -37,13 +37,13 @@ public class MotorSubsystem extends SubsystemBase { // Defines the subsystem tha
             MotorConstants.kI, // Integral term (corrects accumulated error over time)
             MotorConstants.kD, // Derivative term (slows down overshoot by considering rate of change)
             new TrapezoidProfile.Constraints(
-                MotorConstants.maxAccel, // Maximum acceleration allowed
-                MotorConstants.maxVelocity // Maximum velocity allowed
+                MotorConstants.maxVelocity, // Maximum acceleration allowed
+                MotorConstants.maxAccel // Maximum velocity allowed
             )
         );
 
         // =========================== INITIAL RESET ===========================
-        this.motor.setPosition(0.0); // Reset the motor’s internal position sensor to 0 rotations
+        // this.motor.setPosition(0.0); // Reset the motor’s internal position sensor to 0 rotations
         this.thePID.setGoal(this.goalRotations); // Tell the PID that our first goal is 0 rotations (stay still)
 
         // =========================== TELEMETRY SETUP ===========================
@@ -90,7 +90,7 @@ public class MotorSubsystem extends SubsystemBase { // Defines the subsystem tha
     @Override
     public void periodic() { // Called automatically ~50 times per second while robot code runs
 
-        // Read the current position from the motor’s internal encoder
+         // Read the current position from the motor’s internal encoder
         double motorPosition = this.motor.getPosition().getValueAsDouble();
 
         // Use the PID controller to calculate how fast the motor should move to reach the goal

@@ -28,7 +28,7 @@ public final class Constants {
 
         // Maximum velocity (rotations per second) the PID can command
         // This affects how quickly it moves toward its goal
-        public static final double maxVelocity = 0.5; // Try 10–30 depending on your setup
+        public static final double maxVelocity = 0.5; 
 
         // Maximum acceleration (rotations per second squared)
         // Higher = snappier motion, lower = smoother motion
@@ -36,7 +36,7 @@ public final class Constants {
 
         // Conversion constants (optional, for clarity)
         // One rotation = 360 degrees
-        public static final double rotationsPerRevolution = 1.0; // The encoder is already in rotations
+        public static final double rotationsPerRevolution = 1.0 ; // The encoder is already in rotations
         public static final double degreesPerRotation = 360.0;   // 1 rotation = 360 degrees
     }
 }
