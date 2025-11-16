@@ -16,7 +16,7 @@ public final class Constants {
 
         // CAN ID for the Kraken X44 motor controller
         // (Change this to match the actual CAN ID of your testbed motor)
-        public static final int motorCanId = -0;
+        public static final int motorCanId = 0;
 
         // PID controller tuning constants — start with these and tune as needed
         // kP: how strongly the motor reacts to position error
