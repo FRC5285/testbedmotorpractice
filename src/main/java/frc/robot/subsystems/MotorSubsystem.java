@@ -19,6 +19,8 @@ public class MotorSubsystem extends SubsystemBase {
     private double targetPosition = 0;
     private double pendingTurns = 0;
 
+    private int min = 0;
+    private int max = 10;
     public MotorSubsystem() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
         MotionMagicConfigs mm = new MotionMagicConfigs();
@@ -63,10 +65,10 @@ public class MotorSubsystem extends SubsystemBase {
 
         if (pendingTurns > 0) {
             pendingTurns--;
-            targetPosition += 1.0;
+            targetPosition += min + (int)(Math.random() * ((max - min) + 1));;
         } else if (pendingTurns < 0) {
             pendingTurns++;
-            targetPosition -= 1.0;
+            targetPosition -= min + (int)(Math.random() * ((max - min) + 1));;
         }
         
 
