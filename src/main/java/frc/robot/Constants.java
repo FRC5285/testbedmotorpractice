@@ -25,8 +25,8 @@ public final class Constants {
         public static final double kI = 0.0;
         public static final double kD = 0.0;
 
-        public static final double maxV = 3.0;
-        public static final double maxA = 2.0;
+        public static final double maxV = 1.5;
+        public static final double maxA = 0.5;
 
         public static final double speed = 0.70;
         public static final double rotations = 360.0;
