@@ -56,6 +56,8 @@ public class MotorSubsystem extends SubsystemBase {
         //resetMotor();
         thisMotor.setPosition(0);
 
+        motorPID.setTolerance(0.1);
+
         // Telemetry
         SendableRegistry.add(this, "Motor");
         SmartDashboard.putData(this);
@@ -68,7 +70,6 @@ public class MotorSubsystem extends SubsystemBase {
 
             //this.thisMotor.setPosition(control);
             this.motorPID.setGoal(control);
-            
         });
     }
 
@@ -78,7 +79,6 @@ public class MotorSubsystem extends SubsystemBase {
 
             //this.thisMotor.setPosition(control);
             this.motorPID.setGoal(control);
-            
         });
     }
 
@@ -123,6 +123,9 @@ public class MotorSubsystem extends SubsystemBase {
 
         // actual rotations
         builder.addDoubleProperty("Motor Rotations", () -> this.thisMotor.getPosition().getValueAsDouble(), null);
+
+        // at goal
+        builder.addBooleanProperty("At Goal", () -> this.motorPID.atGoal(), null);
     }
 
     public double getCurrentPosition(){
