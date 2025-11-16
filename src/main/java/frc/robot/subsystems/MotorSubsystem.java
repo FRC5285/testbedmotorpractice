@@ -51,7 +51,8 @@ public class MotorSubsystem extends SubsystemBase {
         //motorPID.enableContinuousInput(0.0, 1.0);
         //motorPID.setTolerance(0.01);
 
-        resetMotor();
+        //resetMotor();
+        thisMotor.setPosition(0);
 
         SmartDashboard.putData("motor PID", motorPID);
 
@@ -99,7 +100,7 @@ public class MotorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         motorPID.setGoal(control);
-        double calcAmt = motorPID.calculate(this.getCurrentPosition(), control);
+        double calcAmt = motorPID.calculate(this.getCurrentPosition());
         // SmartDashboard.putNumber("calcAmt: ", calcAmt);
         // SmartDashboard.putNumber("Motor Position: ", this.getCurrentPosition());
         // SmartDashboard.putBoolean("atGoal", motorPID.atGoal());
