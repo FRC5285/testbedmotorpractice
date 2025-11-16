@@ -66,7 +66,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     public Command turnClockwise360() {
         return runOnce(() -> {
-            control += 1;
+            this.control += 1;
 
             //this.thisMotor.setPosition(control);
             this.motorPID.setGoal(control);
@@ -75,7 +75,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     public Command turnCounterClockwise360() {
         return runOnce(() -> {
-            control -= 1;
+            this.control -= 1;
 
             //this.thisMotor.setPosition(control);
             this.motorPID.setGoal(control);
