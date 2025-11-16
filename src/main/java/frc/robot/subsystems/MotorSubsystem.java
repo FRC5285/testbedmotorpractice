@@ -14,6 +14,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DutyCycle;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class MotorSubsystem extends SubsystemBase {
@@ -54,8 +56,9 @@ public class MotorSubsystem extends SubsystemBase {
         //resetMotor();
         thisMotor.setPosition(0);
 
-        SmartDashboard.putData("motor PID", motorPID);
-
+        // Telemetry
+        SendableRegistry.add(this, "Motor");
+        SmartDashboard.putData(this);
         control = 0;
     }
 
@@ -112,11 +115,22 @@ public class MotorSubsystem extends SubsystemBase {
         // }
     }
 
+    // Telemetry
+    @Override
+    public void initSendable(SendableBuilder builder){
+        // goal rotations
+        builder.addDoubleProperty("Goal Rotations", () -> this.control, null);
+
+        // actual rotations
+        builder.addDoubleProperty("Motor Rotations", () -> this.thisMotor.getPosition().getValueAsDouble(), null);
+    }
+
     public double getCurrentPosition(){
         double position = thisMotor.getPosition().getValueAsDouble();
         //return position < 0.0 ? position + 1.0 : position;
         return position;
-      }
+    }
+
 }
 
 
