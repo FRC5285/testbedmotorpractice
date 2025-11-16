@@ -24,9 +24,9 @@ public class MotorSubsystem extends SubsystemBase {
     public MotorSubsystem() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
         MotionMagicConfigs mm = new MotionMagicConfigs();
-        mm.MotionMagicCruiseVelocity = 80;   
-        mm.MotionMagicAcceleration = 160;    
-        mm.MotionMagicJerk = 1600;
+        mm.MotionMagicCruiseVelocity = 0;   
+        mm.MotionMagicExpo_kV = 0.12;    
+        mm.MotionMagicExpo_kA = 0.1;
         configs.MotionMagic = mm;
 
         Slot0Configs slot0 =configs.Slot0;
