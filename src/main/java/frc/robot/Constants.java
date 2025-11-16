@@ -16,7 +16,7 @@ public final class Constants {
 
         // CAN ID for the Kraken X44 motor controller
         // (Change this to match the actual CAN ID of your testbed motor)
-        public static final int motorCanId = 1;
+        public static final int motorCanId = -0;
 
         // PID controller tuning constants — start with these and tune as needed
         // kP: how strongly the motor reacts to position error
@@ -24,15 +24,15 @@ public final class Constants {
         // kD: dampens oscillation (helps avoid overshoot)
         public static final double kP =  0.5;  // Proportional gain — adjust for your motor
         public static final double kI = 0.0;    // Integral gain — usually 0 for position control
-        public static final double kD = 0.1;    // Derivative gain — helps smooth motion
+        public static final double kD = 0.0;    // Derivative gain — helps smooth motion
 
         // Maximum velocity (rotations per second) the PID can command
         // This affects how quickly it moves toward its goal
-        public static final double maxVelocity = 20.0; // Try 10–30 depending on your setup
+        public static final double maxVelocity = 0.5; // Try 10–30 depending on your setup
 
         // Maximum acceleration (rotations per second squared)
         // Higher = snappier motion, lower = smoother motion
-        public static final double maxAccel = 40.0;
+        public static final double maxAccel = 1;
 
         // Conversion constants (optional, for clarity)
         // One rotation = 360 degrees
