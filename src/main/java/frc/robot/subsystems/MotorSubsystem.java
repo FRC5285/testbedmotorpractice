@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,9 +19,8 @@ public class MotorSubsystem extends SubsystemBase {
     private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
     private double targetPosition = 0;
     private double pendingTurns = 0;
+    DutyCycleEncoder m_encoder = new DutyCycleEncoder(0);
 
-    private int min = 0;
-    private int max = 10;
     public MotorSubsystem() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
         MotionMagicConfigs mm = new MotionMagicConfigs();
@@ -43,18 +43,6 @@ public class MotorSubsystem extends SubsystemBase {
         motor.getConfigurator().apply(configs);
         }
 
-    public Command turnClockwise360() {
-        return runOnce(() -> {
-            pendingTurns++;
-
-        });
-    }
-    public Command turnCounterClockwise360() {
-        return runOnce(() -> {
-            pendingTurns--;
-        });
-    }
-
     public Command stopMotor() {
         return runOnce(() -> motor.stopMotor());
     }
@@ -62,14 +50,8 @@ public class MotorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         double currentPos = motor.getPosition().getValueAsDouble();
-
-        if (pendingTurns > 0) {
-            pendingTurns--;
-            targetPosition += min + (int)(Math.random() * ((max - min) + 1));;
-        } else if (pendingTurns < 0) {
-            pendingTurns++;
-            targetPosition -= min + (int)(Math.random() * ((max - min) + 1));;
-        }
+        double encoderPos = m_encoder.get();
+        targetPosition = encoderPos;
         
 
         motor.setControl(motionMagicRequest.withPosition(targetPosition).withSlot(0));
