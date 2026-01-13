@@ -16,9 +16,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class MotorSubsystem extends SubsystemBase {
     private final TalonFX motor = new TalonFX(MotorConstants.motorCanId); 
-    private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
+    final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
     private double targetPosition = 0;
-    private double pendingTurns = 0;
     DutyCycleEncoder m_encoder = new DutyCycleEncoder(0);
 
     public MotorSubsystem() {
