@@ -24,6 +24,7 @@ public class MotorSubsystem extends SubsystemBase {
     private final ProfiledPIDController motorPID;
     // Initializes a duty cycle encoder on DIO pins 0
     DutyCycleEncoder m_encoder = new DutyCycleEncoder(0, 1, -1);
+    private double angle = 1;
     private double goalRotations = 0;
     private boolean motorOverride = false;
 
@@ -70,7 +71,9 @@ public class MotorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         control = m_encoder.get();
-        motorPID.setGoal(control);
+        angle += (control + 2);
+        angle = angle % 2;
+        motorPID.setGoal(angle - 1);
         double calcAmt = motorPID.calculate(this.getCurrentPosition());
         this.thisMotor.set(calcAmt);
     }
