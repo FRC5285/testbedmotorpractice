@@ -40,6 +40,7 @@ public class MotorSubsystem extends SubsystemBase {
         configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         motor.setPosition(0);
         motor.getConfigurator().apply(configs);
+        m_encoder.reset();
 
         m_encoder.setDistancePerPulse(1 / 1024);
 
