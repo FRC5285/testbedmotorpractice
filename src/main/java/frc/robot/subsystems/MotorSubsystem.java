@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,8 +18,7 @@ public class MotorSubsystem extends SubsystemBase {
     private final TalonFX motor = new TalonFX(MotorConstants.motorCanId); 
     private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
     private double targetPosition = 0;
-    private double pendingTurns = 0;
-    DutyCycleEncoder m_encoder = new DutyCycleEncoder(0);
+    Encoder m_encoder = new Encoder(0, 1);
 
     public MotorSubsystem() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -41,6 +40,9 @@ public class MotorSubsystem extends SubsystemBase {
         configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         motor.setPosition(0);
         motor.getConfigurator().apply(configs);
+
+        m_encoder.setDistancePerPulse(1 / 1024);
+
         }
 
     public Command stopMotor() {
@@ -50,9 +52,9 @@ public class MotorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         double currentPos = motor.getPosition().getValueAsDouble();
-        double encoderPos = m_encoder.get();
+        double encoderPos = m_encoder.getDistance();
         targetPosition = encoderPos;
-        
+        System.out.println(targetPosition);
 
         motor.setControl(motionMagicRequest.withPosition(targetPosition).withSlot(0));
         // check if motor reached the target within tolerance
