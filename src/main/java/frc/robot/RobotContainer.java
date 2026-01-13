@@ -35,9 +35,9 @@ public class RobotContainer {
      */
     private void configureBindings() {
         // When "b" is pressed on the controller, turn the motor clockwise 360 degrees.
-        m_driverController.b().onTrue(theMotor.turnClockwise360());
+        //m_driverController.b().onTrue(theMotor.turnClockwise360());
 
         // When "x" is pressed on the controller, turn the motor counterclockwise 360 degrees.
-        m_driverController.x().onTrue(theMotor.turnCounterClockwise360());
+        //m_driverController.x().onTrue(theMotor.turnCounterClockwise360());
     }
 }
