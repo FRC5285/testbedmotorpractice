@@ -14,7 +14,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DutyCycle;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,8 +23,7 @@ public class MotorSubsystem extends SubsystemBase {
     private final TalonFX thisMotor;
     private final ProfiledPIDController motorPID;
     // Initializes a duty cycle encoder on DIO pins 0
-    DutyCycleEncoder m_encoder = new DutyCycleEncoder(0, 1, -1);
-    private double angle = 1;
+    Encoder m_encoder = new Encoder(0, 1, -1);
     private double goalRotations = 0;
     private boolean motorOverride = false;
 
@@ -70,10 +69,8 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        control = m_encoder.get();
-        angle += (control + 2);
-        angle = angle % 2;
-        motorPID.setGoal(angle - 1);
+        control = m_encoder.getDistance();
+        motorPID.setGoal(control);
         double calcAmt = motorPID.calculate(this.getCurrentPosition());
         this.thisMotor.set(calcAmt);
     }
@@ -89,6 +86,8 @@ public class MotorSubsystem extends SubsystemBase {
 
         // at goal
         builder.addBooleanProperty("At Goal", () -> this.motorPID.atGoal(), null);
+
+        builder.addDoubleProperty("control", () -> this.control, null);
     }
 
     public double getCurrentPosition(){
