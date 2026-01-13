@@ -23,7 +23,7 @@ public class MotorSubsystem extends SubsystemBase {
     private final TalonFX thisMotor;
     private final ProfiledPIDController motorPID;
     // Initializes a duty cycle encoder on DIO pins 0
-    Encoder m_encoder = new Encoder(0, 1, -1);
+    Encoder m_encoder = new Encoder(0, 1);
     private double goalRotations = 0;
     private boolean motorOverride = false;
 
