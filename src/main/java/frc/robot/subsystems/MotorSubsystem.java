@@ -38,7 +38,10 @@ public class MotorSubsystem extends SubsystemBase {
 
         thisMotor.setPosition(0);
 
-        motorPID.setTolerance(0.06);
+        motorPID.setTolerance(0.01);
+
+        m_encoder.reset();
+        m_encoder.setDistancePerPulse(1.0 / 124.0);
 
         // Telemetry
         SendableRegistry.add(this, "Motor");
