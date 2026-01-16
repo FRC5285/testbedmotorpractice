@@ -72,7 +72,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        control = m_encoder.getDistance();
+        control = -m_encoder.getDistance();
         motorPID.setGoal(control);
         double calcAmt = motorPID.calculate(this.getCurrentPosition());
         this.thisMotor.set(calcAmt);
