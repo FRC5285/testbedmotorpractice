@@ -19,7 +19,7 @@ public class MotorSubsystem extends SubsystemBase {
     private final TalonFX motor = new TalonFX(MotorConstants.motorCanId); 
     private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
     private double targetPosition = 0;
-    Encoder m_encoder = new Encoder(0,1);
+    Encoder m_encoder = new Encoder(MotorConstants.channel_a, MotorConstants.channel_b);
 
     public MotorSubsystem() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -43,7 +43,7 @@ public class MotorSubsystem extends SubsystemBase {
         motor.getConfigurator().apply(configs);
 
         m_encoder.reset();
-        m_encoder.setDistancePerPulse(1.0 /1024.0);
+        m_encoder.setDistancePerPulse(1.0 / MotorConstants.m_steps);
         }
 
     public Command stopMotor() {

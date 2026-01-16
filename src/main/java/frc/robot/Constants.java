@@ -29,5 +29,10 @@ public final class Constants {
         /** The CAN ID for the motor */
         public static final int motorCanId = 0;
         public static final double tolerance = 0.025;
+
+        public static final double m_steps = 1024.0;
+
+        public static final int channel_a = 0;
+        public static final int channel_b = 1;
     }
 }
