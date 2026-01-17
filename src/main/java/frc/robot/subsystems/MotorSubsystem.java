@@ -43,7 +43,7 @@ public class MotorSubsystem extends SubsystemBase {
         thisMotor.setPosition(0);
 
         motorPID.setTolerance(0.06);
-        PID.setTolerance(0.06);
+        PID.setTolerance(0.02);
 
         m_encoder.reset();
         m_encoder.setDistancePerPulse(1.0 / 2048);
