@@ -12,6 +12,7 @@ import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.Encoder;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class MotorSubsystem extends SubsystemBase {
     private final TalonFX thisMotor;
     private final ProfiledPIDController motorPID;
+    PIDController PID;
     // Initializes a duty cycle encoder on DIO pins 0
     Encoder m_encoder = new Encoder(0, 1);
     private double goalRotations = 0;
@@ -36,9 +38,12 @@ public class MotorSubsystem extends SubsystemBase {
             new TrapezoidProfile.Constraints(MotorConstants.maxV, MotorConstants.maxA)
         );
 
+        PID = new PIDController(MotorConstants.kP, MotorConstants.kI, MotorConstants.kD);
+
         thisMotor.setPosition(0);
 
         motorPID.setTolerance(0.06);
+        PID.setTolerance(0.06);
 
         m_encoder.reset();
         m_encoder.setDistancePerPulse(1.0 / 2048);
@@ -73,8 +78,9 @@ public class MotorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         control = -m_encoder.getDistance();
-        motorPID.setGoal(control);
-        double calcAmt = motorPID.calculate(this.getCurrentPosition());
+        //motorPID.setGoal(control);
+        //double calcAmt = motorPID.calculate(this.getCurrentPosition());
+        double calcAmt = PID.calculate(control);
         this.thisMotor.set(calcAmt);
     }
 
