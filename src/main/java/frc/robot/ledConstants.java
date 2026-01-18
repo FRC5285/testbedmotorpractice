@@ -17,6 +17,7 @@ public final class ledConstants {
 
         public static final double hotPink = 0.57; //trans flag colours
         public static final double skyBlue = 0.83; //warning before shift change
+        public static final double aqua = 0.81;
         public static final double blue = 0.87; 
         public static final double white = 0.93;
 
