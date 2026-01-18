@@ -26,7 +26,7 @@ public class MotorSubsystem extends SubsystemBase { // Defines the subsystem tha
     /** Creates a new MotorSubsystem. */
     Encoder m_encoder = new Encoder(0, 1);
     public MotorSubsystem() { // Constructor runs once when the subsystem is created
-        m_encoder.setDistancePerPulse(4.0 / 256.0);
+        m_encoder.setDistancePerPulse(4.0 / 256.0/32.0);
         // =========================== MOTOR INITIALIZATION ===========================
         this.motor = new TalonFX(MotorConstants.motorCanId); // Creates motor object using its CAN ID from Constants.java
 
