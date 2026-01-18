@@ -110,7 +110,7 @@ public class MotorSubsystem extends SubsystemBase { // Defines the subsystem tha
     @Override
     public void initSendable(SendableBuilder builder){
         // Add a live display value for the goal rotations (the target position)
-        builder.addDoubleProperty("Goal Rotations", () -> this.m_encoder.getDistance(), null);
+        builder.addDoubleProperty("Goal Rotations", () -> -this.m_encoder.getDistance(), null);
 
         // Add a live display value for the actual motor position (from encoder)
         builder.addDoubleProperty("Motor Rotations", () -> this.motor.getPosition().getValueAsDouble(), null);
