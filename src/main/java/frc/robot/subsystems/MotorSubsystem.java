@@ -80,7 +80,7 @@ public class MotorSubsystem extends SubsystemBase {
         control = -m_encoder.getDistance();
         //motorPID.setGoal(control);
         //double calcAmt = motorPID.calculate(this.getCurrentPosition());
-        double calcAmt = PID.calculate(control, this.getCurrentPosition());
+        double calcAmt = PID.calculate(this.getCurrentPosition(), control);
         this.thisMotor.set(calcAmt);
     }
 
