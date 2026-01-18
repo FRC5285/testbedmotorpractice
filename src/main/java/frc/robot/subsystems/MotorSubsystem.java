@@ -43,7 +43,7 @@ public class MotorSubsystem extends SubsystemBase {
         thisMotor.setPosition(0);
 
         motorPID.setTolerance(0.06);
-        PID.setTolerance(0.02);
+        PID.setTolerance(0.1);
 
         m_encoder.reset();
         m_encoder.setDistancePerPulse(1.0 / 2048);
@@ -80,7 +80,7 @@ public class MotorSubsystem extends SubsystemBase {
         control = -m_encoder.getDistance();
         //motorPID.setGoal(control);
         //double calcAmt = motorPID.calculate(this.getCurrentPosition());
-        double calcAmt = PID.calculate(control);
+        double calcAmt = PID.calculate(control, this.getCurrentPosition());
         this.thisMotor.set(calcAmt);
     }
 
