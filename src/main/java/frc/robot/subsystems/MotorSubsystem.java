@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController; // PID controller wi
 import edu.wpi.first.math.trajectory.TrapezoidProfile; // Defines motion profile constraints
 import edu.wpi.first.util.sendable.SendableBuilder; // Used to display custom values on SmartDashboard
 import edu.wpi.first.util.sendable.SendableRegistry; // Registers subsystems or sendables for telemetry
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; // Displays live data on the SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command; // Base class for command objects
 import edu.wpi.first.wpilibj2.command.SubsystemBase; // Base class for all subsystems in command-based programming
@@ -23,6 +24,7 @@ public class MotorSubsystem extends SubsystemBase { // Defines the subsystem tha
     private ProfiledPIDController thePID; // PID controller object for precise position control
 
     /** Creates a new MotorSubsystem. */
+    Encoder m_encoder = new Encoder(0, 1);
     public MotorSubsystem() { // Constructor runs once when the subsystem is created
 
         // =========================== MOTOR INITIALIZATION ===========================
@@ -89,7 +91,7 @@ public class MotorSubsystem extends SubsystemBase { // Defines the subsystem tha
     // =========================== PERIODIC CONTROL LOOP ===========================
     @Override
     public void periodic() { // Called automatically ~50 times per second while robot code runs
-
+        this.thePID.setGoal(m_encoder.getDistance());
          // Read the current position from the motor’s internal encoder
         double motorPosition = this.motor.getPosition().getValueAsDouble();
 
@@ -98,6 +100,7 @@ public class MotorSubsystem extends SubsystemBase { // Defines the subsystem tha
 
         // Send the calculated output (speed) to the motor controller
         this.motor.set(newMotorSpeed);
+        
 
         // Equivalent single-line version of the above three lines:
         // this.motor.set(this.thePID.calculate(this.motor.getPosition().getValueAsDouble()));
