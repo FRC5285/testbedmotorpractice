@@ -22,9 +22,9 @@ public final class Constants {
         // kP: how strongly the motor reacts to position error
         // kI: fixes small steady-state errors (usually 0 unless needed)
         // kD: dampens oscillation (helps avoid overshoot)
-        public static final double kP =  0.6;  // Proportional gain — adjust for your motor
-        public static final double kI = 0.0;    // Integral gain — usually 0 for position control
-        public static final double kD = 0.0;    // Derivative gain — helps smooth motion
+        public static final double kP = 4.0;  // Proportional gain — adjust for your motor
+        public static final double kI = 0.1;    // Integral gain — usually 0 for position control
+        public static final double kD = 0.1;    // Derivative gain — helps smooth motion
 
         // Maximum velocity (rotations per second) the PID can command
         // This affects how quickly it moves toward its goal
