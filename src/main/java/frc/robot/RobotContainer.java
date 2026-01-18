@@ -1,9 +1,11 @@
 package frc.robot;
 
 import frc.robot.subsystems.MotorSubsystem;
+import frc.robot.subsystems.ledSubSystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import static frc.robot.ledConstants.Constants.*;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -13,11 +15,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     private final MotorSubsystem theMotor = new MotorSubsystem();
+    private final ledSubSystem theLED = new ledSubSystem();
+
     // Xbox Controller Object
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         // Configure the trigger bindings
         configureBindings();
+        theLED.currentPattern = new double[]{1.0, skyBlue, hotPink, white, hotPink, skyBlue}; //first index is speed in Hz
     }
 
     /**
