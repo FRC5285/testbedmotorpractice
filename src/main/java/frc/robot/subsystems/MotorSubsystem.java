@@ -91,7 +91,7 @@ public class MotorSubsystem extends SubsystemBase { // Defines the subsystem tha
     // =========================== PERIODIC CONTROL LOOP ===========================
     @Override
     public void periodic() { // Called automatically ~50 times per second while robot code runs
-        this.thePID.setGoal(m_encoder.getDistance());
+        this.thePID.setGoal(-m_encoder.getDistance());
          // Read the current position from the motor’s internal encoder
         double motorPosition = this.motor.getPosition().getValueAsDouble();
 
