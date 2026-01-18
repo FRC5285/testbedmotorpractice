@@ -43,7 +43,7 @@ public class MotorSubsystem extends SubsystemBase {
         motor.getConfigurator().apply(configs);
 
         m_encoder.reset();
-        m_encoder.setDistancePerPulse(1.0 / MotorConstants.m_steps);
+        m_encoder.setDistancePerPulse(0.5 / MotorConstants.m_steps); //m_steps should be 2048 but im lazy
         }
 
     public Command stopMotor() {
@@ -54,7 +54,7 @@ public class MotorSubsystem extends SubsystemBase {
     public void periodic() {
         double currentPos = motor.getPosition().getValueAsDouble();
         double encoderPos = m_encoder.getDistance();
-        targetPosition = encoderPos;
+        targetPosition = -encoderPos; //negative since spin wrong direction
         motor.setControl(motionMagicRequest.withPosition(targetPosition).withSlot(0));
         // check if motor reached the target within tolerance
         SmartDashboard.putNumber("rotations", currentPos);
