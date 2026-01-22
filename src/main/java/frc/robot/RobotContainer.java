@@ -22,7 +22,7 @@ public class RobotContainer {
     public RobotContainer() {
         // Configure the trigger bindings
         configureBindings();
-        theLED.currentPattern = new double[]{1.0, skyBlue, hotPink, white, hotPink, skyBlue}; //first index is speed in Hz
+        theLED.currentPattern = trans_flag; //first index is speed in Hz
     }
 
     /**
