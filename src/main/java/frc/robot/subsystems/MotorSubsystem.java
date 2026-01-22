@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.wpilibj.Encoder;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -17,14 +18,17 @@ public class MotorSubsystem extends SubsystemBase {
     private TalonFX motor;
     private double goalRotations;
     private ProfiledPIDController thePID;
-
+    Encoder m_encoder = new Encoder(0, 1);
 
     /** Creates a new MotorSubsystem. */
     public MotorSubsystem() {
+        m_encoder.setDistancePerPulse(4.0/256.0/32.0);
+
         this.motor = new TalonFX(MotorConstants.motorCanId);
         this.goalRotations = 0.0;
         this.thePID = new ProfiledPIDController(MotorConstants.kP, MotorConstants.kI, MotorConstants.kD, new TrapezoidProfile.Constraints(MotorConstants.maxAccel, MotorConstants.maxVelocity));
         
+
         this.motor.setPosition(0,0);
         this.thePID.setGoal(this.goalRotations);
 
@@ -76,6 +80,8 @@ public class MotorSubsystem extends SubsystemBase {
     @Override // Rewrites (adds content to) a method from SubsystemBase
     public void periodic() {
         // This method will be called once per scheduler run (50 times per second)
+        this.thePID.setGoal(m_encoder.getDistance());
+
         double motorPosition = this.motor.getPosition().getValueAsDouble();
         double newMotorSpeed = this.thePID.calculate(motorPosition);
         this.motor.set(newMotorSpeed);
@@ -83,7 +89,7 @@ public class MotorSubsystem extends SubsystemBase {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("Goal Rotations", () -> this.goalRotations, null);
+        builder.addDoubleProperty("Goal Rotations", () -> this.m_encoder.getDistance(), null);
         builder.addDoubleProperty("Motor Rotations", () -> this.motor.getPosition().getValueAsDouble(), null);
     }
 }

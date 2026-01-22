@@ -1,3 +1,4 @@
+
 package frc.robot;
 
 /**
@@ -19,10 +20,10 @@ public final class Constants {
         /** The CAN ID for the motor */
         public static final int motorCanId = 0;
 
-        public static final double kP = 0.5;
+        public static final double kP = 0.6;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
-        public static final double maxAccel = 0.5;
-        public static final double maxVelocity = 1.0;
+        public static final double maxAccel = 1;
+        public static final double maxVelocity = 0.5;
     }
 }
