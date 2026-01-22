@@ -44,7 +44,7 @@ public final class ledConstants {
 
         //pride flag presets
         public static final double[] trans_flag = {
-        1.0, skyBlue, red, darkGray, orange, violet
+        1.0, darkGreen, green, lime, blueGreen, lawnGreen, violet, blueViolet
         };
 
 
