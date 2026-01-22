@@ -14,6 +14,7 @@ public final class ledConstants {
 
     public static class Constants {
         public static final int led_pin = 0;
+
         public static final double hotPink = 0.57; //trans flag colours
         public static final double darkred = 0.59;
         public static final double red = 0.61; //resevered for errors/ warnings
@@ -35,6 +36,7 @@ public final class ledConstants {
         public static final double white = 0.93;
         public static final double gray = 0.95;
         public static final double darkGray = 0.97;
+        public static final double black = 0.99;
 
         
 
@@ -44,9 +46,167 @@ public final class ledConstants {
 
         //pride flag presets
         public static final double[] trans_flag = {
-        1.0, skyBlue, hotPink, white, hotPink, skyBlue
+        2.0, skyBlue, hotPink, white, hotPink, skyBlue, off, off
         };
 
+        public static final double[] aroace_flag = {
+        2.0, orange, gold, white, skyBlue, darkBlue, off, off
+        };
+
+        public static final double[] lesbian_flag = {
+        2.0, redOrange, orange, white, hotPink, violet, off, off
+        };
+        
+        public static final double[] sapphic_flag = {
+        2.0, hotPink, white, hotPink, off, off
+        };
+
+        public static final double[] queer_flag = {
+        2.0, red, orange, yellow, lime, blue, violet, off, off, off
+        };
+
+        public static final double[] lithrosexual_flag = {
+        2.0, redOrange, orange, yellow, white, black, off, off
+        };
+
+        public static final double[] femaric_flag = {
+        2.0, black, white, hotPink, off, off
+        };
+
+        public static final double[] mascic_flag = {
+        2.0, black, white, skyBlue, off, off
+        };
+
+        public static final double[] genderfluid_flag = {
+        2.0, hotPink, white, violet, black, blueViolet, off, off
+        };
+
+        public static final double[] achillean_flag = {
+        2.0, skyBlue, white, skyBlue, off, off
+        };
+
+        public static final double[] genderqueer_flag = {
+        2.0, violet, white, lime, off, off
+        };
+        
+        public static final double[] aro_flag = {
+        2.0, darkGreen, lime, white, gray, black, off, off
+        };
+
+        public static final double[] ace_flag = {
+        2.0, black, gray, white, violet, off, off
+        };
+
+        public static final double[] oriented_aroace = {
+        2.0, black, gray, white, blueGreen, off, off
+        };
+
+        public static final double[] enby_flag = {
+        2.0, yellow, white, violet, black, off, off
+        };
+
+        public static final double[] neutrois_flag = {
+        2.0, white, lime, black, off, off
+        };
+
+        public static final double[] androgyne_flag = {
+        2.0, hotPink, violet, skyBlue, off, off
+        };
+
+        public static final double[] polyamorous_flag = {
+        2.0, blue, red, black, off, off
+        };
+
+        public static final double[] transfem_flag = {
+        2.0, skyBlue, white, hotPink, white, skyBlue, off, off
+        };
+
+        public static final double[] bisexual_flag = {
+        2.0, hotPink, violet, blueViolet, off, off
+        };
+
+        public static final double[] agender_flag = {
+        2.0, black, gray, white, lime, gray, black, off, off
+        };
+
+        public static final double[] diamoric_flag = {
+        2.0, lime, white, lime, off, off
+        };
+
+        public static final double[] libramasc_flag = {
+        2.0, black, gray, white, skyBlue, white, gray, black, off, off
+        };
+
+        public static final double[] librafemme_flag = {
+        2.0, black, gray, white, violet, white, gray, black, off, off
+        };
+
+        public static final double[] polygender_flag = {
+        2.0, black, gray, blue, yellow, hotPink, off,
+        };
+
+        public static final double[] queerplatonic_flag = {
+        2.0, yellow, hotPink, white, gray, black, off, off
+        };
+
+        public static final double[] pansexual_flag = {
+        2.0, hotPink, yellow, skyBlue, off, off
+        };
+
+        public static final double[] maverique_flag = { 
+        2.0, yellow, white, orange, off, off
+        };
+
+        public static final double[] greysexual_flag = {
+        2.0, violet, gray, white, gray, violet, off, off
+        };
+
+        public static final double[] polysexual_flag = {
+        2.0, hotPink, lime, skyBlue, off, off
+        };
+
+        public static final double[] trigender_flag = {
+        2.0, hotPink, violet, lime, violet, hotPink, off, off
+        };
+
+        public static final double[] greyromantic_flag = {  
+        2.0, darkGreen, gray, white, gray, darkGreen, off, off
+        };
+
+        public static final double[][] ALL_FLAGS = {
+            trans_flag,
+            aroace_flag,
+            lesbian_flag,
+            sapphic_flag,
+            queer_flag,
+            lithrosexual_flag,
+            femaric_flag,
+            mascic_flag,
+            genderfluid_flag,
+            achillean_flag,
+            genderqueer_flag,
+            aro_flag,
+            ace_flag,
+            oriented_aroace,
+            enby_flag,
+            neutrois_flag,
+            androgyne_flag,
+            polyamorous_flag,
+            transfem_flag,
+            bisexual_flag,
+            agender_flag,
+            diamoric_flag,
+            libramasc_flag,
+            librafemme_flag,
+            polygender_flag,
+            queerplatonic_flag,
+            pansexual_flag,
+            maverique_flag,
+            greysexual_flag,
+            polysexual_flag,
+            trigender_flag,
+            greyromantic_flag
+        };
 
     }
 }
