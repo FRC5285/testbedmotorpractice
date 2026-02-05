@@ -24,7 +24,6 @@ public class MotorSubsystem extends SubsystemBase {
     public MotorSubsystem() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
         MotionMagicConfigs mm = new MotionMagicConfigs();
-        mm.MotionMagicCruiseVelocity = MotorConstants.CruiseVelocity;   
         mm.MotionMagicAcceleration = MotorConstants.ACceleration;    
         mm.MotionMagicJerk = MotorConstants.Jerk;
         configs.MotionMagic = mm;
@@ -55,7 +54,7 @@ public class MotorSubsystem extends SubsystemBase {
         double currentPos = motor.getPosition().getValueAsDouble();
         double encoderPos = m_encoder.getDistance();
         targetPosition = -encoderPos; //negative since spin wrong direction
-        motor.setControl(motionMagicRequest.withPosition(targetPosition).withSlot(0));
+        motor.setControl(motionMagicRequest.withVelocity(160).withSlot(0)); //160 radians per ssecond
         // check if motor reached the target within tolerance
         SmartDashboard.putNumber("rotations", currentPos);
         SmartDashboard.putNumber("traget", targetPosition);
