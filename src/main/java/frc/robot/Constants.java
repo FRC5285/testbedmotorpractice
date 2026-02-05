@@ -17,7 +17,7 @@ public final class Constants {
         // Constants for the motor go here
 
         /** The CAN ID for the motor */
-        public static final int motorCanId = 0;
+        public static final int motorCanId = 1;
         public static final int encoderA = 1;
         public static final int encoderB = 2;
 
