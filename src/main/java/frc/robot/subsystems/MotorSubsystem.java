@@ -35,11 +35,6 @@ public class MotorSubsystem extends SubsystemBase {
         return lidarSensor.getRange() / 1000.0 - MotorConstants.lidarOffset;
     }
 
-    /**
-     * Creates a command that turns the motor shaft 360 degrees clockwise.
-     *
-     * @return a command that turns the motor shaft 360 degrees clockwise.
-     */
     public Command turnClockwise360() {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
