@@ -18,5 +18,7 @@ public final class Constants {
 
         /** The CAN ID for the motor */
         public static final int motorCanId = 0;
+        public static final double lidarOffset = 0.010; //need to calibrate -- Distance of lidar measurement - real measurement // 0.025
+
     }
 }
