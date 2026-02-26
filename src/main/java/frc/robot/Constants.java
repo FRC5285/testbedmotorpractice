@@ -20,5 +20,13 @@ public final class Constants {
         public static final int motorCanId = 0;
         public static final double lidarOffset = 0.010; //need to calibrate -- Distance of lidar measurement - real measurement // 0.025
 
+        public static final double kP = 0.6;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
+        public static final double maxV = 1.0;
+        public static final double maxA = 0.5;
+
+        public static final double rotateGoalRotations = 0.25;
     }
 }

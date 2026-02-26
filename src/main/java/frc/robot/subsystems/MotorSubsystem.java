@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+//import com.ctre.phoenix6.hardware.TalonFX;
+
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -19,15 +21,22 @@ import frc.robot.Constants.MotorConstants;
 
 
 public class MotorSubsystem extends SubsystemBase {
-    // Class variables (ints, doubles, motor objects) go here
 
+    //private TalonFX rotateMotor;
+    //private double goalRotations;
+    //private ProfiledPIDController rotatePID;
 
     private Rev2mDistanceSensor lidarSensor = new Rev2mDistanceSensor(Port.kOnboard, Unit.kMillimeters, RangeProfile.kHighSpeed);
 
-    /** Creates a new MotorSubsystem. */
     public MotorSubsystem() {
         lidarSensor.setAutomaticMode(true);
 
+        //goalRotations = 0.0;
+        //rotateMotor = new TalonFX(MotorConstants.motorCanId);
+        //rotatePID = new ProfiledPIDController(MotorConstants.kP, MotorConstants.kI, MotorConstants.kD, new TrapezoidProfile.Constraints(MotorConstants.maxA, MotorConstants.maxV));
+        
+        //rotateMotor.setPosition(0,0);
+        //rotatePID.setGoal(goalRotations);
     }
 
     public double getLidarMeters() {
@@ -35,44 +44,38 @@ public class MotorSubsystem extends SubsystemBase {
         return lidarSensor.getRange() / 1000.0 - MotorConstants.lidarOffset;
     }
 
-    /**
-     * Creates a command that turns the motor shaft 360 degrees clockwise.
-     *
-     * @return a command that turns the motor shaft 360 degrees clockwise.
-     */
     public Command turnClockwise360() {
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
+
         return runOnce(() -> {
-            /* one-time action goes here */
+
+            //goalRotations = MotorConstants.rotateGoalRotations;
+            //rotatePID.setGoal(goalRotations);
         });
-        // return run(() -> {
-        //
-        // }); // run() returns a command that repeats 50x per second until canceled or interrupted
     }
 
-    /**
-     * Creates a command that turns the motor shaft 360 degrees counterclockwise.
-     *
-     * @return a command that turns the motor shaft 360 degrees counterclockwise.
-     */
     public Command turnCounterClockwise360() {
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
+
         return runOnce(() -> {
-            /* one-time action goes here */
+
         });
-        // return run(() -> {
-        //
-        // }); // run() returns a command that repeats 50x per second until canceled or interrupted
     }
 
-    @Override // Rewrites (adds content to) a method from SubsystemBase
+    public void resetPID() {
+
+        //double motorPosition = rotateMotor.getPosition().getValueAsDouble();
+        //rotatePID.reset(motorPosition);
+    }
+
     public void periodic() {
-        // This method will be called once per scheduler run (50 times per second)
+
+        //double motorPosition = rotateMotor.getPosition().getValueAsDouble();
+        //double rotateNewMotorSpeed = rotatePID.calculate(motorPosition);
+        //rotateMotor.set(rotateNewMotorSpeed);
     }
 
     public void initSendable(SendableBuilder builder){
         builder.addDoubleProperty("Lidar Distance", () -> getLidarMeters(), null);
+        //builder.addDoubleProperty("Rotate Motor Rotations", () -> rotateMotor.getPosition().getValueAsDouble(), null);
+        //builder.addDoubleProperty("Rotate Goal Rotations", () -> this.goalRotations, null);
     }
 }
