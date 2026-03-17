@@ -1,8 +1,8 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorConstants;
@@ -11,15 +11,20 @@ import frc.robot.Constants.MotorConstants;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class MotorSubsystem extends SubsystemBase {
-    private final TalonFX motor = new TalonFX(MotorConstants.motorCanId); 
-    private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
-    private double targetPosition = 0;
-    Encoder m_encoder = new Encoder(MotorConstants.channel_a, MotorConstants.channel_b);
+    private final TalonFX motor = new TalonFX(16); 
+    private final TalonFX motor_1 = new TalonFX(17);
+    private final MotionMagicVelocityVoltage motionMagicRequest = new MotionMagicVelocityVoltage(0);
 
     public MotorSubsystem() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -37,27 +42,33 @@ public class MotorSubsystem extends SubsystemBase {
         slot0.kD = MotorConstants.kd;
         configs.Slot0 = slot0;
 
-        configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        configs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         motor.setPosition(0);
+        motor_1.setPosition(0);
+        motor_1.getConfigurator().apply(configs);
         motor.getConfigurator().apply(configs);
 
-        m_encoder.reset();
-        m_encoder.setDistancePerPulse(0.5 / MotorConstants.m_steps); //m_steps should be 2048 but im lazy
+        SendableRegistry.add(this, "Turret");
+        SmartDashboard.putData(this);
         }
 
     public Command stopMotor() {
         return runOnce(() -> motor.stopMotor());
     }
+    public Command runmotor() {
+        return run(() -> {
+            motor.setControl(motionMagicRequest.withVelocity(-100).withSlot(0));
+            motor_1.setControl(new Follower(motor.getDeviceID(), MotorAlignmentValue.Opposed));
+        });
+
+    }
 
     @Override
     public void periodic() {
-        double currentPos = motor.getPosition().getValueAsDouble();
-        double encoderPos = m_encoder.getDistance();
-        targetPosition = -encoderPos; //negative since spin wrong direction
-        motor.setControl(motionMagicRequest.withVelocity(160).withSlot(0)); //160 radians per ssecond
-        // check if motor reached the target within tolerance
-        SmartDashboard.putNumber("rotations", currentPos);
-        SmartDashboard.putNumber("traget", targetPosition);
-        SmartDashboard.putNumber("error", (currentPos-targetPosition));
-        }
+    }
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.addDoubleProperty("error",() -> (motor.getVelocity().getValueAsDouble() + 100), null);
+        builder.addDoubleProperty("current speed",() -> (motor.getVelocity().getValueAsDouble()), null);
+    }
 }

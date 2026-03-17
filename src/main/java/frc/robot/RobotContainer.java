@@ -2,6 +2,7 @@ package frc.robot;
 
 import frc.robot.subsystems.MotorSubsystem;
 import frc.robot.subsystems.ledSubSystem;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -13,8 +14,10 @@ import static frc.robot.ledConstants.Constants.*;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+    private final CommandXboxController m_joystick = new CommandXboxController(0);
+
     // The robot's subsystems and commands are defined here...
-    private final MotorSubsystem theMotor = new MotorSubsystem();
+    private final MotorSubsystem Motor = new MotorSubsystem();
     private final ledSubSystem theLED = new ledSubSystem();
 
     // Xbox Controller Object
@@ -36,5 +39,7 @@ public class RobotContainer {
      */
     private void configureBindings() {
         // When "b" is pressed on the controller, turn the motor clockwise 360 degrees.
+        m_joystick.leftBumper().whileTrue(Motor.runmotor());
+        m_joystick.leftBumper().whileFalse(Motor.stopMotor());
     }
 }
