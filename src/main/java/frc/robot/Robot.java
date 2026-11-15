@@ -1,7 +1,8 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.wpilib.framework.TimedRobot;
+import org.wpilib.telemetry.Telemetry;
+import org.wpilib.command2.CommandScheduler;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -36,6 +37,8 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+
+        Telemetry.log("robot", this.m_robotContainer);
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
@@ -54,21 +57,23 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {}
 
     @Override
-    public void teleopInit() {}
+    public void teleopInit() {
+        this.m_robotContainer.resetPIDs();
+    }
 
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {}
 
     @Override
-    public void testInit() {
+    public void utilityInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
     }
 
     /** This function is called periodically during test mode. */
     @Override
-    public void testPeriodic() {}
+    public void utilityPeriodic() {}
 
     /** This function is called once when the robot is first started up. */
     @Override

@@ -2,8 +2,9 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.MotorSubsystem;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import org.wpilib.command2.button.CommandXboxController;
+import org.wpilib.command2.button.Trigger;
+import org.wpilib.telemetry.TelemetryTable;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -28,16 +29,21 @@ public class RobotContainer {
      * Use this method to define your trigger->command mappings. Triggers can be created via the
      * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
      * predicate, or via the named factories in {@link
-     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-     * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-     * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+     * org.wpilib.command2.button.CommandGenericHID}'s subclasses for {@link
+     * CommandXboxController Xbox}/{@link org.wpilib.command2.button.CommandPS4Controller
+     * PS4} controllers or {@link org.wpilib.command2.button.CommandJoystick Flight
      * joysticks}.
      */
     private void configureBindings() {
         // When "b" is pressed on the controller, turn the motor clockwise 360 degrees.
-        m_driverController.b().onTrue(theMotor.turnClockwise360());
+        m_driverController.b().whileTrue(theMotor.turnClockwise());
 
         // When "x" is pressed on the controller, turn the motor counterclockwise 360 degrees.
-        m_driverController.x().onTrue(theMotor.turnCounterClockwise360());
+        m_driverController.x().whileTrue(theMotor.turnCounterClockwise());
+
+    }
+
+    public void resetPIDs() {
+        this.theMotor.resetPIDs();
     }
 }
