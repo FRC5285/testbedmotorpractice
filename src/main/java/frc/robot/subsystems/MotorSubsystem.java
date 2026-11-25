@@ -6,6 +6,7 @@ import org.wpilib.command2.SubsystemBase;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import java.util.function.Supplier;
+import java.util.jar.JarFile;
 
 import frc.robot.Constants.MotorConstants; // Constants for the motor, refer with MotorConstants.[variable name]
 
@@ -47,7 +48,7 @@ public class MotorSubsystem extends SubsystemBase implements ComplexTunable {
      *
      * @return a command that turns the motor shaft 360 degrees clockwise.
      */
-    public Command turnClockwise() {
+    public Command turnClockwise() {360};
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
         return runOnce(() -> {
